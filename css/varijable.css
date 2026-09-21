@@ -20,8 +20,8 @@
   --boja-tekst: #f3ede3;             /* glavni tekst na tamnoj pozadini */
   --boja-tekst-prigusen: #b9ac98;    /* sporedni tekst, opisi, meta info */
 
-  --boja-naglasak: #c9974a;          /* glavna naglasna boja (gumbi, linkovi, ikone) */
-  --boja-naglasak-tamnija: #a97b34;  /* hover/active stanje naglasne boje */
+  --boja-naglasak: #d6ab63;          /* glavna naglasna boja (gumbi, linkovi, ikone) */
+  --boja-naglasak-tamnija: #b88742;  /* hover/active stanje naglasne boje */
   --boja-naglasak-tekst: #171310;    /* tekst koji stoji NA naglasnoj boji (npr. u gumbu) */
 
   --boja-uspjeh: #6a9955;            /* poruke o uspjehu u obrascu rezervacije */

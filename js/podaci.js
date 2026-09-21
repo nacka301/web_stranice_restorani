@@ -15,7 +15,7 @@ const PODACI = {
 
   // ---------- OSNOVNI PODACI O LOKALU ----------
   naziv: "Konoba Maslina",
-  slogan: "Domaća kuhinja s pogledom na more",
+  slogan: "Okusi Jadrana. Večeri za pamćenje.",
   opisKratki: "Ovdje ide kratak opis restorana u jednoj ili dvije rečenice, koji se prikazuje u odjeljku 'O nama' i u meta opisu stranice.",
 
   // Putanja do logotipa (neobavezno). Ako je prazno, u zaglavlju se prikazuje samo naziv teksta.
@@ -52,7 +52,7 @@ const PODACI = {
 
   // ---------- O NAMA ----------
   oNama: {
-    naslov: "O nama",
+    naslov: "Tradicija, servirana s karakterom.",
     tekst: "U Konobi Maslina njegujemo okuse domaće dalmatinske kuhinje i recepte koji se generacijama prenose za stolom. Svaki dan biramo svježe namirnice, kvalitetno meso, domaći sir, ribu i povrće od lokalnih proizvođača.\n\nNaša kuhinja je jednostavna, iskrena i puna okusa — od mirisa kruha iz peći i maslinovog ulja do jela koja se pripremaju polako, s pažnjom i poštovanjem prema tradiciji. Želimo da se kod nas osjećate kao za obiteljskim stolom, uz dobru hranu, čašu vina i pogled na more.",
     slika: "slike/o-nama.jpg",
   },
