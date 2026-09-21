@@ -405,7 +405,7 @@ function izgradiObrazacRezervacije(nacin) {
       <span class="rez-korak" data-korak="2">02 <small>Podaci</small></span>
     </div>
     <div class="rez-korak-sadrzaj rez-korak-sadrzaj--aktivan" data-sadrzaj="1">
-      <p class="rez-korak__naslov">Pronađite slobodan termin</p>
+      <p class="rez-korak__naslov">Odaberite termin</p>
       <div class="obrazac__polje">
         <label for="rez-broj-gostiju">Broj osoba *</label>
         <input type="number" id="rez-broj-gostiju" name="brojGostiju" min="1" max="50" inputmode="numeric" placeholder="Unesite broj osoba">

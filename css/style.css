@@ -746,10 +746,11 @@ textarea:focus-visible {
 }
 
 .rez-korak__naslov {
-  margin-bottom: var(--razmak-m);
+  margin-bottom: 1.15rem;
   color: var(--boja-tekst);
   font-family: var(--font-naslovi);
-  font-size: 1.45rem;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
 }
 
 .rez-korak__gumbi {
