@@ -648,6 +648,58 @@ textarea:focus-visible {
   }
 }
 
+/* Organski prijelazi između glavnih sekcija. */
+@media (min-width: 640px) {
+  .hero,
+  .o-nama,
+  .jelovnik,
+  .rezervacija,
+  .galerija,
+  .info,
+  .kontakt {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero::after,
+  .o-nama::after,
+  .jelovnik::after,
+  .rezervacija::after,
+  .galerija::after,
+  .info::after {
+    position: absolute;
+    right: -5%;
+    bottom: -1px;
+    left: -5%;
+    z-index: 2;
+    height: clamp(1.5rem, 3vw, 3.25rem);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    content: "";
+    pointer-events: none;
+  }
+
+  .hero::after {
+    background: #15110e;
+  }
+
+  .o-nama::after {
+    background: var(--boja-pozadina-svjetlija);
+  }
+
+  .jelovnik::after {
+    background: #100d0b;
+  }
+
+  .rezervacija::after,
+  .galerija::after {
+    background: #15110e;
+  }
+
+  .info::after {
+    background: var(--boja-pozadina-svjetlija);
+  }
+}
+
 @media (min-width: 960px) {
   .jelovnik__mreza {
     grid-template-columns: repeat(3, 1fr);
