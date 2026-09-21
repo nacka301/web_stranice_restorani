@@ -407,10 +407,6 @@ function izgradiObrazacRezervacije(nacin) {
     <div class="rez-korak-sadrzaj rez-korak-sadrzaj--aktivan" data-sadrzaj="1">
       <p class="rez-korak__naslov">Odaberite termin</p>
       <div class="obrazac__polje">
-        <label for="rez-broj-gostiju">Broj osoba *</label>
-        <input type="number" id="rez-broj-gostiju" name="brojGostiju" min="1" max="50" inputmode="numeric" placeholder="Unesite broj osoba">
-      </div>
-      <div class="obrazac__polje">
         <label>Odaberite datum *</label>
         <div class="rez-kalendar" id="rez-kalendar"></div>
       </div>
@@ -421,7 +417,7 @@ function izgradiObrazacRezervacije(nacin) {
       <div class="obrazac__polje" id="rez-stolovi-polje" hidden>
         <label>Odaberite stol</label>
         <div class="rez-stolovi" id="rez-stolovi"></div>
-        <p class="rez-stolovi__napomena">Odaberite stol koji odgovara vašem broju osoba.</p>
+        <p class="rez-stolovi__napomena">Odaberite stol koji želite rezervirati.</p>
       </div>
       <button type="button" class="gumb gumb--puni gumb--puna-sirina" id="rez-nastavi">Nastavi na podatke →</button>
     </div>
@@ -453,7 +449,6 @@ function izgradiObrazacRezervacije(nacin) {
     stol: null,
   };
 
-  const brojGostiju = obrazac.querySelector("#rez-broj-gostiju");
   const kalendar = obrazac.querySelector("#rez-kalendar");
   const terminiPolje = obrazac.querySelector("#rez-termini-polje");
   const terminiLista = obrazac.querySelector("#rez-termini-lista");
@@ -464,11 +459,6 @@ function izgradiObrazacRezervacije(nacin) {
   const poruka = obrazac.querySelector("#rez-poruka");
 
   obrazac.querySelector("#rez-nastavi").addEventListener("click", () => {
-    const broj = obrazac.brojGostiju.value.trim();
-    if (!broj || Number(broj) < 1) {
-      prikaziPorukuObrasca(poruka, "Molimo unesite broj osoba.", "greska");
-      return;
-    }
     if (!odabrani.datum) {
       prikaziPorukuObrasca(poruka, "Molimo odaberite datum.", "greska");
       return;
@@ -501,10 +491,7 @@ function izgradiObrazacRezervacije(nacin) {
     });
   });
 
-  napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi);
-  brojGostiju.addEventListener("input", () => {
-    if (odabrani.datum) prikaziTermine(odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi);
-  });
+  napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, stoloviPolje, stolovi);
 
   obrazac.addEventListener("submit", (dogadjaj) => {
     dogadjaj.preventDefault();
@@ -514,7 +501,7 @@ function izgradiObrazacRezervacije(nacin) {
   return obrazac;
 }
 
-function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi) {
+function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, stoloviPolje, stolovi) {
   const danas = new Date();
   danas.setHours(0, 0, 0, 0);
   let prikazaniMjesec = new Date(danas.getFullYear(), danas.getMonth(), 1);
@@ -581,7 +568,7 @@ function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGos
         odabrani.stol = null;
         stoloviPolje.hidden = true;
         iscrtaj();
-        prikaziTermine(odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi);
+        prikaziTermine(odabrani, terminiPolje, terminiLista, stoloviPolje, stolovi);
       });
       dani.appendChild(gumb);
     }
@@ -603,24 +590,23 @@ function statusDana(datum, danas) {
   return "slobodno";
 }
 
-function prikaziTermine(odabrani, omot, lista, brojGostiju, stoloviPolje, stolovi) {
+function prikaziTermine(odabrani, omot, lista, stoloviPolje, stolovi) {
   omot.hidden = false;
   lista.innerHTML = "";
-  const potrebno = Number(brojGostiju.value) || 1;
   const termini = ["12:00", "13:30", "18:00", "19:30", "21:00"];
   termini.forEach((vrijeme, index) => {
     const slobodno = Math.max(0, 8 - ((index + Number(odabrani.datum.slice(-2))) % 5));
     const gumb = document.createElement("button");
     gumb.type = "button";
     gumb.className = "termin-opcija";
-    gumb.disabled = slobodno < potrebno;
-    gumb.innerHTML = `<span>${vrijeme}</span><small class="${gumb.disabled ? "termin-opcija__puno" : ""}">${gumb.disabled ? "Nema dovoljno mjesta" : slobodno + " mjesta"}</small>`;
+    gumb.disabled = slobodno === 0;
+    gumb.innerHTML = `<span>${vrijeme}</span><small class="${gumb.disabled ? "termin-opcija__puno" : ""}">${gumb.disabled ? "Nema slobodnih stolova" : "Slobodni stolovi"}</small>`;
     gumb.addEventListener("click", () => {
       lista.querySelectorAll(".termin-opcija").forEach((stavka) => stavka.classList.remove("termin-opcija--odabran"));
       gumb.classList.add("termin-opcija--odabran");
       odabrani.vrijeme = vrijeme;
       odabrani.stol = null;
-      prikaziStolove(odabrani, stoloviPolje, stolovi, brojGostiju);
+      prikaziStolove(odabrani, stoloviPolje, stolovi);
     });
     lista.appendChild(gumb);
   });
@@ -636,10 +622,9 @@ const STOLOVI = [
   { broj: 7, kapacitet: 8, zona: "Unutarnji dio", oblik: "pravokutni", x: 36, y: 78 },
 ];
 
-function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
+function prikaziStolove(odabrani, omot, spremnik) {
   omot.hidden = false;
   spremnik.innerHTML = "";
-  const potrebno = Number(brojGostiju.value) || 1;
   const kljucTermina = Number(odabrani.datum.slice(-2)) + Number(odabrani.vrijeme.replace(":", ""));
   ["PROZOR", "SREDINA", "TERASA"].forEach((naziv, indeks) => {
     const zona = document.createElement("span");
@@ -654,18 +639,16 @@ function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
 
   STOLOVI.forEach((stol) => {
     const zauzet = (kljucTermina + stol.broj) % 7 === 0;
-    const neOdgovara = stol.kapacitet < potrebno;
     const gumb = document.createElement("button");
     gumb.type = "button";
     gumb.className = "rez-stol rez-stol--" + stol.oblik;
     gumb.setAttribute("aria-label", `Stol ${stol.broj}, do ${stol.kapacitet} osoba, ${stol.zona}`);
     gumb.style.left = stol.x + "%";
     gumb.style.top = stol.y + "%";
-    gumb.disabled = zauzet || neOdgovara;
+    gumb.disabled = zauzet;
     gumb.innerHTML = `<strong>${stol.broj}</strong><span>${stol.kapacitet} ${stol.kapacitet === 1 ? "osoba" : "osobe"}</span>`;
-    gumb.title = zauzet ? "Stol je zauzet" : neOdgovara ? `Stol je za najmanje ${stol.kapacitet} osoba` : `${stol.zona} — do ${stol.kapacitet} osoba`;
+    gumb.title = zauzet ? "Stol je zauzet" : `${stol.zona} — do ${stol.kapacitet} osoba`;
     if (zauzet) gumb.classList.add("rez-stol--zauzet");
-    if (neOdgovara) gumb.classList.add("rez-stol--premalen");
     gumb.addEventListener("click", () => {
       spremnik.querySelectorAll(".rez-stol").forEach((stavka) => stavka.classList.remove("rez-stol--odabran"));
       gumb.classList.add("rez-stol--odabran");
@@ -679,12 +662,11 @@ function posaljiRezervaciju(obrazac, nacin, odabrani) {
   const poruka = obrazac.querySelector("#rez-poruka");
   const ime = obrazac.ime.value.trim();
   const telefon = obrazac.telefon.value.trim();
-  const brojGostiju = obrazac.brojGostiju.value.trim();
   const datum = odabrani.datum;
   const vrijeme = odabrani.vrijeme;
   const napomena = obrazac.napomena.value.trim();
 
-  const greska = provjeriObrazacRezervacije(ime, brojGostiju, datum);
+  const greska = provjeriObrazacRezervacije(ime, datum);
   if (greska) {
     prikaziPorukuObrasca(poruka, greska, "greska");
     return;
@@ -706,7 +688,6 @@ function posaljiRezervaciju(obrazac, nacin, odabrani) {
     `Rezervacija stola\n` +
     `Ime: ${ime}\n` +
     `Telefon: ${telefon}\n` +
-    `Broj osoba: ${brojGostiju}\n` +
     `Stol: ${odabrani.stol.broj} — do ${odabrani.stol.kapacitet} osoba (${odabrani.stol.zona})\n` +
     `Datum: ${datum}` + (vrijeme ? ` u ${vrijeme}` : "") + `\n`;
   if (napomena) tekstPoruke += `Napomena: ${napomena}\n`;
@@ -726,9 +707,8 @@ function posaljiRezervaciju(obrazac, nacin, odabrani) {
   obrazac.reset();
 }
 
-function provjeriObrazacRezervacije(ime, brojGostiju, datum) {
+function provjeriObrazacRezervacije(ime, datum) {
   if (!ime) return "Molimo unesite ime i prezime.";
-  if (!brojGostiju || Number(brojGostiju) < 1) return "Molimo unesite broj osoba.";
   if (!datum) return "Molimo odaberite datum.";
 
   const odabraniDatum = new Date(datum + "T00:00:00");

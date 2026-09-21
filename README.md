@@ -122,6 +122,9 @@ rezervacija: {
   Potreban je `emailZaRezervacije` (ako ga izostavite, koristi se glavni
   `email`).
 
+Obrazac rezervacije traži datum, termin i željeni stol. Broj osoba se namjerno
+ne traži u ovom MVP-u — restoran naknadno potvrđuje detalje rezervacije.
+
 Stranica je statična i nema poslužitelj — ni u jednom načinu rada podaci
 se ne šalju nikamo osim u tu jednu poveznicu (`tel:`, `wa.me` ili
 `mailto:`) koju otvara preglednik.
