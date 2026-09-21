@@ -1285,7 +1285,7 @@ textarea:focus-visible {
   }
 
   .info__lokacija {
-    align-self: start;
+    align-self: center;
     padding: 0.9rem;
   }
 }
