@@ -950,12 +950,14 @@ textarea:focus-visible {
   min-height: 29rem;
   overflow: hidden;
   background:
-    linear-gradient(90deg, rgba(201, 151, 74, 0.06) 1px, transparent 1px),
-    linear-gradient(rgba(201, 151, 74, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, transparent 32.9%, rgba(201, 151, 74, 0.16) 33%, transparent 33.2%, transparent 66.2%, rgba(201, 151, 74, 0.16) 66.4%, transparent 66.6%),
+    linear-gradient(90deg, rgba(201, 151, 74, 0.04) 1px, transparent 1px),
+    linear-gradient(rgba(201, 151, 74, 0.04) 1px, transparent 1px),
     #211b16;
-  background-size: 2rem 2rem;
+  background-size: 100% 100%, 2rem 2rem, 2rem 2rem;
   border: 1px solid var(--boja-obrub);
   border-radius: var(--zaobljenje-m);
+  box-shadow: inset 0 0 0 0.45rem rgba(10, 8, 6, 0.12), 0 14px 30px rgba(0, 0, 0, 0.16);
 }
 
 .rez-stolovi::before {
@@ -1008,6 +1010,43 @@ textarea:focus-visible {
   right: 1.2rem;
 }
 
+.rez-stolovi__legenda {
+  position: absolute;
+  right: 1.2rem;
+  bottom: 4.25rem;
+  left: 1.2rem;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  color: rgba(238, 222, 198, 0.6);
+  font-size: 0.58rem;
+}
+
+.rez-stolovi__legenda span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.rez-stolovi__legenda i {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.rez-legenda--slobodno {
+  background: #7cad5b;
+}
+
+.rez-legenda--odabrano {
+  background: var(--boja-naglasak);
+}
+
+.rez-legenda--zauzeto {
+  background: var(--boja-greska);
+}
+
 .rez-stol {
   position: absolute;
   z-index: 1;
@@ -1023,13 +1062,40 @@ textarea:focus-visible {
   border: 1px solid rgba(106, 153, 85, 0.7);
   border-radius: 0.9rem;
   color: #c8e9b9;
+  box-shadow: 0 0.35rem 0 rgba(26, 45, 24, 0.7), 0 0 0 0.25rem rgba(106, 153, 85, 0.06);
   transition: background var(--trajanje-brzo) ease, border-color var(--trajanje-brzo) ease, transform var(--trajanje-brzo) ease;
   transform: translate(-50%, -50%);
+}
+
+.rez-stol::before,
+.rez-stol::after {
+  position: absolute;
+  width: 0.8rem;
+  height: 0.32rem;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  content: "";
+  opacity: 0.65;
+}
+
+.rez-stol::before {
+  top: -0.5rem;
+}
+
+.rez-stol::after {
+  bottom: -0.5rem;
 }
 
 .rez-stol--okrugli {
   width: 5.2rem;
   min-height: 5.2rem;
+  border-radius: 50%;
+}
+
+.rez-stol--okrugli::before,
+.rez-stol--okrugli::after {
+  width: 0.65rem;
+  height: 0.65rem;
   border-radius: 50%;
 }
 
@@ -1052,7 +1118,7 @@ textarea:focus-visible {
   background: var(--boja-naglasak);
   border-color: var(--boja-naglasak);
   color: var(--boja-naglasak-tekst);
-  box-shadow: 0 0 0 3px rgba(201, 151, 74, 0.2);
+  box-shadow: 0 0 0 3px rgba(201, 151, 74, 0.2), 0 0.35rem 0 rgba(111, 74, 23, 0.7);
 }
 
 .rez-stol--zauzet,
@@ -2642,6 +2708,13 @@ body {
   .rez-stol--okrugli {
     width: 4rem;
     min-height: 4rem;
+  }
+
+  .rez-stolovi__legenda {
+    right: 0.8rem;
+    left: 0.8rem;
+    gap: 0.45rem;
+    font-size: 0.5rem;
   }
 
   .obrazac {

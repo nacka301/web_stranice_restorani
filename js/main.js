@@ -647,6 +647,10 @@ function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
     zona.textContent = naziv;
     spremnik.appendChild(zona);
   });
+  const legenda = document.createElement("div");
+  legenda.className = "rez-stolovi__legenda";
+  legenda.innerHTML = "<span><i class=\"rez-legenda--slobodno\"></i> Slobodno</span><span><i class=\"rez-legenda--odabrano\"></i> Odabrano</span><span><i class=\"rez-legenda--zauzeto\"></i> Nije dostupno</span>";
+  spremnik.appendChild(legenda);
 
   STOLOVI.forEach((stol) => {
     const zauzet = (kljucTermina + stol.broj) % 7 === 0;
@@ -654,10 +658,11 @@ function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
     const gumb = document.createElement("button");
     gumb.type = "button";
     gumb.className = "rez-stol rez-stol--" + stol.oblik;
+    gumb.setAttribute("aria-label", `Stol ${stol.broj}, do ${stol.kapacitet} osoba, ${stol.zona}`);
     gumb.style.left = stol.x + "%";
     gumb.style.top = stol.y + "%";
     gumb.disabled = zauzet || neOdgovara;
-    gumb.innerHTML = `<strong>${stol.broj}</strong><span>${stol.kapacitet} ${stol.kapacitet === 1 ? "osoba" : "osoba"}</span>`;
+    gumb.innerHTML = `<strong>${stol.broj}</strong><span>${stol.kapacitet} ${stol.kapacitet === 1 ? "osoba" : "osobe"}</span>`;
     gumb.title = zauzet ? "Stol je zauzet" : neOdgovara ? `Stol je za najmanje ${stol.kapacitet} osoba` : `${stol.zona} — do ${stol.kapacitet} osoba`;
     if (zauzet) gumb.classList.add("rez-stol--zauzet");
     if (neOdgovara) gumb.classList.add("rez-stol--premalen");
