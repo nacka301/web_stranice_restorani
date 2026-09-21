@@ -2001,6 +2001,50 @@ body {
     padding-block: 4rem;
   }
 
+  /* Transparent hero navigation: the brand sits inside the photograph. */
+  .zaglavlje {
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(8, 6, 5, 0.42), transparent);
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .zaglavlje__unutra {
+    padding-top: 1.35rem;
+    padding-bottom: 1rem;
+  }
+
+  .zaglavlje__naziv {
+    color: rgba(255, 249, 238, 0.92);
+    font-family: var(--font-tekst);
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  }
+
+  .hero__sadrzaj {
+    padding-top: 8rem;
+  }
+
+  @media (max-width: 639px) {
+    .zaglavlje__unutra {
+      padding-top: 1rem;
+      padding-bottom: 0.65rem;
+    }
+
+    .zaglavlje__naziv {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+    }
+
+    .hero__sadrzaj {
+      padding-top: 6rem;
+    }
+  }
+
   .kontakt::before {
     top: 4rem;
     font-size: 5rem;
