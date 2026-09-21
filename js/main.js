@@ -474,7 +474,8 @@ function izgradiObrazacRezervacije(nacin) {
     obrazac.querySelectorAll(".rez-korak").forEach((korak) => korak.classList.toggle("rez-korak--aktivan", korak.dataset.korak === "2"));
     poruka.className = "obrazac__poruka";
     requestAnimationFrame(() => {
-      korakDrugi.scrollIntoView({ behavior: "smooth", block: "start" });
+      const vrhKoraka = korakDrugi.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: Math.max(0, vrhKoraka - 96), behavior: "smooth" });
     });
   });
 
@@ -483,7 +484,8 @@ function izgradiObrazacRezervacije(nacin) {
     korakPrvi.hidden = false;
     obrazac.querySelectorAll(".rez-korak").forEach((korak) => korak.classList.toggle("rez-korak--aktivan", korak.dataset.korak === "1"));
     requestAnimationFrame(() => {
-      korakPrvi.scrollIntoView({ behavior: "smooth", block: "start" });
+      const vrhKoraka = korakPrvi.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: Math.max(0, vrhKoraka - 96), behavior: "smooth" });
     });
   });
 
