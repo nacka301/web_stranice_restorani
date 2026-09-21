@@ -627,13 +627,13 @@ function prikaziTermine(odabrani, omot, lista, brojGostiju, stoloviPolje, stolov
 }
 
 const STOLOVI = [
-  { broj: 1, kapacitet: 2, zona: "Uz prozor", oblik: "okrugli" },
-  { broj: 2, kapacitet: 2, zona: "Terasa", oblik: "okrugli" },
-  { broj: 3, kapacitet: 4, zona: "Unutarnji dio", oblik: "pravokutni" },
-  { broj: 4, kapacitet: 4, zona: "Uz prozor", oblik: "pravokutni" },
-  { broj: 5, kapacitet: 6, zona: "Unutarnji dio", oblik: "pravokutni" },
-  { broj: 6, kapacitet: 6, zona: "Terasa", oblik: "pravokutni" },
-  { broj: 7, kapacitet: 8, zona: "Unutarnji dio", oblik: "pravokutni" },
+  { broj: 1, kapacitet: 2, zona: "Uz prozor", oblik: "okrugli", x: 18, y: 24 },
+  { broj: 2, kapacitet: 2, zona: "Terasa", oblik: "okrugli", x: 48, y: 20 },
+  { broj: 3, kapacitet: 4, zona: "Unutarnji dio", oblik: "pravokutni", x: 77, y: 24 },
+  { broj: 4, kapacitet: 4, zona: "Uz prozor", oblik: "pravokutni", x: 20, y: 51 },
+  { broj: 5, kapacitet: 6, zona: "Unutarnji dio", oblik: "pravokutni", x: 52, y: 51 },
+  { broj: 6, kapacitet: 6, zona: "Terasa", oblik: "pravokutni", x: 81, y: 51 },
+  { broj: 7, kapacitet: 8, zona: "Unutarnji dio", oblik: "pravokutni", x: 36, y: 78 },
 ];
 
 function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
@@ -641,6 +641,12 @@ function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
   spremnik.innerHTML = "";
   const potrebno = Number(brojGostiju.value) || 1;
   const kljucTermina = Number(odabrani.datum.slice(-2)) + Number(odabrani.vrijeme.replace(":", ""));
+  ["PROZOR", "SREDINA", "TERASA"].forEach((naziv, indeks) => {
+    const zona = document.createElement("span");
+    zona.className = "rez-stolovi__zona rez-stolovi__zona--" + indeks;
+    zona.textContent = naziv;
+    spremnik.appendChild(zona);
+  });
 
   STOLOVI.forEach((stol) => {
     const zauzet = (kljucTermina + stol.broj) % 7 === 0;
@@ -648,6 +654,8 @@ function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
     const gumb = document.createElement("button");
     gumb.type = "button";
     gumb.className = "rez-stol rez-stol--" + stol.oblik;
+    gumb.style.left = stol.x + "%";
+    gumb.style.top = stol.y + "%";
     gumb.disabled = zauzet || neOdgovara;
     gumb.innerHTML = `<strong>${stol.broj}</strong><span>${stol.kapacitet} ${stol.kapacitet === 1 ? "osoba" : "osoba"}</span>`;
     gumb.title = zauzet ? "Stol je zauzet" : neOdgovara ? `Stol je za najmanje ${stol.kapacitet} osoba` : `${stol.zona} — do ${stol.kapacitet} osoba`;

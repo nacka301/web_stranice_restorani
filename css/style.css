@@ -946,22 +946,74 @@ textarea:focus-visible {
 }
 
 .rez-stolovi {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.65rem;
-  padding: 0.85rem;
+  position: relative;
+  min-height: 29rem;
+  overflow: hidden;
   background:
-    linear-gradient(rgba(201, 151, 74, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(201, 151, 74, 0.05) 1px, transparent 1px),
-    var(--boja-pozadina);
+    linear-gradient(90deg, rgba(201, 151, 74, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(201, 151, 74, 0.06) 1px, transparent 1px),
+    #211b16;
   background-size: 2rem 2rem;
   border: 1px solid var(--boja-obrub);
   border-radius: var(--zaobljenje-m);
 }
 
+.rez-stolovi::before {
+  position: absolute;
+  inset: 0.7rem;
+  border: 1px solid rgba(201, 151, 74, 0.25);
+  border-radius: 1.1rem;
+  content: "";
+  pointer-events: none;
+}
+
+.rez-stolovi::after {
+  position: absolute;
+  right: 0.7rem;
+  bottom: 0.7rem;
+  left: 0.7rem;
+  height: 3.2rem;
+  border-top: 1px solid rgba(201, 151, 74, 0.35);
+  background: linear-gradient(90deg, rgba(77, 55, 36, 0.7), rgba(34, 27, 21, 0.2));
+  content: "ŠANK  •  ULAZ";
+  color: var(--boja-tekst-prigusen);
+  font-size: 0.62rem;
+  line-height: 3.2rem;
+  letter-spacing: 0.18em;
+  text-align: center;
+}
+
+.rez-stolovi__zona {
+  position: absolute;
+  z-index: 1;
+  color: rgba(238, 222, 198, 0.48);
+  font-size: 0.58rem;
+  letter-spacing: 0.16em;
+  pointer-events: none;
+}
+
+.rez-stolovi__zona--0 {
+  top: 1.2rem;
+  left: 1.2rem;
+}
+
+.rez-stolovi__zona--1 {
+  top: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.rez-stolovi__zona--2 {
+  top: 1.2rem;
+  right: 1.2rem;
+}
+
 .rez-stol {
+  position: absolute;
+  z-index: 1;
   display: flex;
-  min-height: 4rem;
+  width: 5.4rem;
+  min-height: 4.4rem;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -972,9 +1024,12 @@ textarea:focus-visible {
   border-radius: 0.9rem;
   color: #c8e9b9;
   transition: background var(--trajanje-brzo) ease, border-color var(--trajanje-brzo) ease, transform var(--trajanje-brzo) ease;
+  transform: translate(-50%, -50%);
 }
 
 .rez-stol--okrugli {
+  width: 5.2rem;
+  min-height: 5.2rem;
   border-radius: 50%;
 }
 
@@ -990,7 +1045,7 @@ textarea:focus-visible {
   background: var(--boja-naglasak);
   border-color: var(--boja-naglasak);
   color: var(--boja-naglasak-tekst);
-  transform: translateY(-2px);
+  transform: translate(-50%, -50%) translateY(-3px);
 }
 
 .rez-stol--odabran {
@@ -2576,13 +2631,17 @@ body {
   }
 
   .rez-stolovi {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.45rem;
-    padding: 0.6rem;
+    min-height: 24rem;
   }
 
   .rez-stol {
+    width: 4.2rem;
     min-height: 3.5rem;
+  }
+
+  .rez-stol--okrugli {
+    width: 4rem;
+    min-height: 4rem;
   }
 
   .obrazac {
