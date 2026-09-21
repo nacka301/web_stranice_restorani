@@ -2764,6 +2764,46 @@ body {
   }
 }
 
+/* Jelovnik ostaje centriran bez horizontalnog slidera kategorija. */
+.jelovnik__zaglavlje {
+  text-align: center;
+}
+
+.jelovnik__naslov {
+  margin-inline: auto;
+}
+
+.jelovnik__filteri {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  overflow: visible;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 0;
+  padding-bottom: 0;
+  scrollbar-width: none;
+}
+
+.jelovnik__filter {
+  flex: 0 1 auto;
+  white-space: nowrap;
+}
+
+@media (max-width: 639px) {
+  .jelovnik__filteri {
+    gap: 0.55rem;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+
+  .jelovnik__filter {
+    padding: 0.55em 0.9em;
+    font-size: 0.86rem;
+  }
+}
+
 @media (min-width: 640px) {
   .kontakt {
     padding-block: 4.5rem;
