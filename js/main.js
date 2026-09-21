@@ -746,6 +746,7 @@ function postaviRadnoVrijemeILokaciju() {
 
   const adresa = el("info-adresa");
   const gumbKarta = el("info-karta-gumb");
+  const karta = el("info-karta");
 
   if (adresa) adresa.textContent = PODACI.adresa || "";
 
@@ -754,6 +755,14 @@ function postaviRadnoVrijemeILokaciju() {
       gumbKarta.href = PODACI.googleKarta;
     } else {
       gumbKarta.remove();
+    }
+  }
+
+  if (karta) {
+    if (PODACI.adresa) {
+      karta.src = "https://www.google.com/maps?q=" + encodeURIComponent(PODACI.adresa) + "&output=embed";
+    } else {
+      karta.remove();
     }
   }
 }

@@ -1171,17 +1171,41 @@ textarea:focus-visible {
 .info__lokacija {
   display: flex;
   flex-direction: column;
-  gap: var(--razmak-s);
+  gap: 0.75rem;
   align-items: flex-start;
-  padding: var(--razmak-l);
+  padding: 0.9rem;
   background: var(--boja-povrsina);
   border: 1px solid var(--boja-obrub);
   border-radius: var(--zaobljenje-m);
 }
 
+.info__lokacija-zaglavlje {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.info__lokacija .info__naslov {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
 .info__adresa {
   color: var(--boja-tekst-prigusen);
+  font-size: 0.85rem;
   line-height: 1.5;
+  margin: 0;
+}
+
+.info__karta {
+  display: block;
+  width: 100%;
+  height: 13rem;
+  border: 0;
+  border-radius: calc(var(--zaobljenje-m) - 0.2rem);
+  filter: grayscale(0.85) sepia(0.15);
 }
 
 .radno-vrijeme {
@@ -1255,12 +1279,7 @@ textarea:focus-visible {
 
   .info__lokacija {
     align-self: start;
-    padding: clamp(1.5rem, 3vw, 2.5rem);
-  }
-
-  .info__lokacija .info__naslov {
-    margin-bottom: 0.5rem;
-    font-size: clamp(2rem, 3.5vw, 3.5rem);
+    padding: 0.9rem;
   }
 }
 
