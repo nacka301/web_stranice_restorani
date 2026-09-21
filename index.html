@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Konoba Maslina — Domaća kuhinja s pogledom na more</title>
+  <meta name="description" content="Ovdje ide kratak opis restorana u jednoj ili dvije rečenice, koji se prikazuje u odjeljku 'O nama' i u meta opisu stranice.">
+
+  <!--
+    NAPOMENA: naslov (title), meta opis i Open Graph oznake ispod
+    moraju ostati OVDJE, statični u HTML-u. Aplikacije poput
+    WhatsAppa i Facebooka ne pokreću JavaScript kad generiraju
+    pregled poveznice, pa main.js/podaci.js ne mogu popuniti ove
+    retke — kad mijenjate podaci.js, ručno prepišite i ove retke
+    istim tekstom.
+  -->
+  <meta property="og:type" content="restaurant.restaurant">
+  <meta property="og:title" content="Konoba Maslina — Domaća kuhinja s pogledom na more">
+  <meta property="og:description" content="Ovdje ide kratak opis restorana u jednoj ili dvije rečenice.">
+  <meta property="og:image" content="slike/hero.jpg">
+
+  <link rel="stylesheet" href="css/varijable.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Poveznica za preskakanje izbornika, vidljiva samo pri fokusu tipkovnicom. -->
+  <a class="preskoci-poveznica" href="#glavni-sadrzaj">Preskoči na sadržaj</a>
+
+  <!-- ============================================================
+       ZAGLAVLJE
+       Naziv/logo lijevo, izbornik desno. Na mobitelu izbornik je
+       iza gumba s tri crte. main.js gradi stavke izbornika prema
+       tome koje su sekcije stvarno prisutne na stranici.
+       ============================================================ -->
+  <header class="zaglavlje" id="zaglavlje">
+    <div class="kontejner zaglavlje__unutra">
+      <a href="#naslovnica" class="zaglavlje__naziv" id="zaglavlje-naziv"></a>
+
+      <button class="hamburger" id="hamburger" type="button" aria-expanded="false" aria-controls="izbornik" aria-label="Otvori izbornik">
+        <span class="hamburger__crta"></span>
+        <span class="hamburger__crta"></span>
+        <span class="hamburger__crta"></span>
+      </button>
+
+      <nav id="izbornik" class="izbornik" aria-label="Glavni izbornik">
+        <!-- main.js ubacuje stavke izbornika -->
+      </nav>
+    </div>
+  </header>
+  <!-- ============================================================
+       KRAJ ZAGLAVLJA
+       ============================================================ -->
+
+  <main id="glavni-sadrzaj">
+
+    <!-- ============================================================
+         NASLOVNICA (HERO)
+         Samostalna cjelina — može se obrisati ili premjestiti bez
+         utjecaja na ostale sekcije.
+         ============================================================ -->
+    <section id="naslovnica" class="hero">
+      <div class="media-rezervat hero__slika" id="hero-slika-omot" data-oznaka="Naslovna fotografija">
+        <img id="hero-slika" alt="" loading="eager">
+      </div>
+      <div class="hero__preljev"></div>
+      <div class="hero__sadrzaj">
+        <h1 class="hero__naziv" id="hero-naziv"></h1>
+        <p class="hero__slogan" id="hero-slogan"></p>
+        <div class="hero__gumbi">
+          <a href="#jelovnik" class="gumb gumb--puni">Pogledaj ponudu</a>
+          <a href="#" class="gumb gumb--obris" id="hero-rezerviraj-gumb">Rezerviraj stol</a>
+        </div>
+      </div>
+    </section>
+    <!-- ============================================================
+         KRAJ NASLOVNICE
+         ============================================================ -->
+
+    <!-- ============================================================
+         O NAMA
+         ============================================================ -->
+    <section id="o-nama" class="o-nama" data-izbornik="O nama">
+      <div class="kontejner o-nama__mreza">
+        <div class="media-rezervat o-nama__slika" id="o-nama-slika-omot" data-oznaka="Fotografija lokala">
+          <img id="o-nama-slika" alt="" loading="lazy">
+        </div>
+        <div>
+          <h2 class="o-nama__naslov" id="o-nama-naslov"></h2>
+          <div class="o-nama__tekst" id="o-nama-tekst"></div>
+        </div>
+      </div>
+    </section>
+    <!-- ============================================================
+         KRAJ O NAMA
+         ============================================================ -->
+
+    <!-- ============================================================
+         JELOVNIK
+         Glavna sekcija stranice. Kategorije i stavke dolaze iz
+         podaci.js; main.js gradi gumbe za filtriranje i kartice.
+         ============================================================ -->
+    <section id="jelovnik" class="jelovnik" data-izbornik="Jelovnik">
+      <div class="kontejner">
+        <div class="jelovnik__zaglavlje">
+          <h2 class="jelovnik__naslov">Jelovnik</h2>
+        </div>
+
+        <div class="jelovnik__pdf" id="jelovnik-pdf">
+          <!-- main.js ubacuje gumb za preuzimanje PDF-a, ako postoji -->
+        </div>
+
+        <div class="jelovnik__filteri" id="jelovnik-filteri" role="group" aria-label="Filtriraj po kategoriji">
+          <!-- main.js ubacuje gumbe kategorija -->
+        </div>
+
+        <div class="jelovnik__mreza" id="jelovnik-mreza">
+          <!-- main.js ubacuje kartice jela -->
+        </div>
+      </div>
+    </section>
+    <!-- ============================================================
+         KRAJ JELOVNIKA
+         ============================================================ -->
+
+    <!-- ============================================================
+         REZERVACIJA
+         Neobavezna sekcija — main.js je u cijelosti uklanja (i iz
+         izbornika) ako je podaci.rezervacija.ukljuceno postavljeno
+         na false.
+         ============================================================ -->
+    <section id="rezervacija" class="rezervacija" data-izbornik="Rezervacija">
+      <div class="kontejner">
+        <div class="rezervacija__kartica">
+          <div class="rezervacija__zaglavlje">
+            <h2 class="rezervacija__naslov">Rezervacija</h2>
+            <p class="rezervacija__opis">Rezervirajte stol unaprijed i osigurajte si mjesto.</p>
+          </div>
+          <div id="rezervacija-sadrzaj">
+            <!-- main.js ubacuje gumb za poziv ili obrazac, ovisno o podaci.rezervacija.nacin -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ============================================================
+         KRAJ REZERVACIJE
+         ============================================================ -->
+
+    <!-- ============================================================
+         GALERIJA
+         main.js uklanja sekciju ako u podaci.js nema nijedne slike.
+         ============================================================ -->
+    <section id="galerija" class="galerija" data-izbornik="Galerija">
+      <div class="kontejner">
+        <h2 class="galerija__naslov">Galerija</h2>
+        <div class="galerija__mreza" id="galerija-mreza">
+          <!-- main.js ubacuje fotografije -->
+        </div>
+      </div>
+    </section>
+    <!-- ============================================================
+         KRAJ GALERIJE
+         ============================================================ -->
+
+    <!-- ============================================================
+         RADNO VRIJEME I LOKACIJA
+         ============================================================ -->
+    <section id="radno-vrijeme" class="info" data-izbornik="Radno vrijeme">
+      <div class="kontejner info__mreza">
+        <div>
+          <h2 class="info__naslov">Radno vrijeme</h2>
+          <table class="radno-vrijeme" id="radno-vrijeme-tablica">
+            <tbody>
+              <!-- main.js ubacuje retke po danima -->
+            </tbody>
+          </table>
+        </div>
+        <div class="info__lokacija">
+          <h2 class="info__naslov">Lokacija</h2>
+          <p class="info__adresa" id="info-adresa"></p>
+          <a href="#" id="info-karta-gumb" class="gumb gumb--obris" target="_blank" rel="noopener noreferrer">Otvori u Google kartama</a>
+        </div>
+      </div>
+    </section>
+    <!-- ============================================================
+         KRAJ RADNOG VREMENA I LOKACIJE
+         ============================================================ -->
+
+    <!-- ============================================================
+         KONTAKT
+         ============================================================ -->
+    <section id="kontakt" class="kontakt" data-izbornik="Kontakt">
+      <div class="kontejner">
+        <p class="kontakt__oznaka">Dođite na ručak. Ostanite zbog atmosfere.</p>
+        <h2 class="kontakt__naslov">Kontakt</h2>
+        <p class="kontakt__uvod">Rezervirajte stol, pitajte nas za preporuku ili samo svratite na čašu vina.</p>
+        <div class="kontakt__podaci">
+          <a href="#" id="kontakt-telefon"><span class="kontakt__ikona">☎</span><span><small>Telefon</small><strong></strong></span></a>
+          <a href="#" id="kontakt-email"><span class="kontakt__ikona">✉</span><span><small>E-mail</small><strong></strong></span></a>
+        </div>
+        <a class="kontakt__akcija" href="https://wa.me/385998535380" target="_blank" rel="noopener noreferrer">Rezervirajte putem WhatsAppa <span>↗</span></a>
+        <div class="kontakt__mreze" id="kontakt-mreze">
+          <!-- main.js ubacuje ikone društvenih mreža -->
+        </div>
+      </div>
+    </section>
+    <!-- ============================================================
+         KRAJ KONTAKTA
+         ============================================================ -->
+
+  </main>
+
+  <!-- ============================================================
+       PODNOŽJE
+       ============================================================ -->
+  <footer class="podnozje">
+    <div class="kontejner">
+      <div class="podnozje__glavno">
+        <p class="podnozje__brend" id="podnozje-naziv"></p>
+        <p class="podnozje__poruka">Domaći okusi. Velike priče.</p>
+        <a href="#naslovnica" class="podnozje__vrh">Nazad na vrh ↑</a>
+      </div>
+      <div class="podnozje__dno">
+        <p id="podnozje-tekst"></p>
+        <p id="podnozje-autor"></p>
+      </div>
+    </div>
+  </footer>
+  <!-- ============================================================
+       KRAJ PODNOŽJA
+       ============================================================ -->
+
+  <!-- Preklop za prikaz fotografije iz galerije preko cijelog ekrana. -->
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Prikaz fotografije">
+    <button class="lightbox__zatvori" id="lightbox-zatvori" type="button" aria-label="Zatvori prikaz">&times;</button>
+    <img class="lightbox__slika" id="lightbox-slika" alt="">
+  </div>
+
+  <div class="plutajuce-mreze" id="plutajuce-mreze" aria-label="Društvene mreže">
+    <!-- main.js ubacuje WhatsApp, Instagram i Facebook poveznice -->
+  </div>
+
+  <script src="js/podaci.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

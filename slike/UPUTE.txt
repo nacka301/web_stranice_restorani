@@ -1,0 +1,36 @@
+SLIKE ZA RESTORAN
+==================
+
+U ovaj folder ubaci fotografije sa tacno ovim imenima:
+
+slike/hero.jpg
+  Velika naslovna fotografija restorana. Preporuka: 1920 x 1080 px.
+
+slike/o-nama.jpg
+  Fotografija enterijera, terase, kuvara ili ekipe. Preporuka: 1000 x 1250 px.
+
+slike/jela/
+  Fotografije jela koje se prikazuju u meniju:
+
+  predjelo-1.jpg  - dalmatinska plata
+  predjelo-2.jpg  - burrata s rajčicom
+  predjelo-3.jpg  - bruschette s kozicama
+  glavno-1.jpg    - crni rižoto od sipe
+  glavno-2.jpg    - brancin sa žara
+  glavno-3.jpg    - pašticada s njokima
+  desert-1.jpg    - domaća rožata
+  desert-2.jpg    - torta od smokava
+
+slike/galerija/
+  Fotografije za galeriju restorana:
+
+  1.jpg
+  2.jpg
+  3.jpg
+  4.jpg
+  5.jpg
+  6.jpg
+
+Koristi JPG format i po mogucnosti fotografije kompresovane za web.
+Ako neka fotografija jos ne postoji, ostavi to mesto prazno i stranica
+ce prikazati rezervni prikaz umesto pokvarene slike.

@@ -1,0 +1,14 @@
+FOTOGRAFIJE GALERIJE
+=====================
+
+Ubaci sest fotografija restorana sa ovim imenima:
+
+1.jpg
+2.jpg
+3.jpg
+4.jpg
+5.jpg
+6.jpg
+
+Ako zelis manje fotografija, ukloni odgovarajuce putanje iz galerija
+niza u js/podaci.js.

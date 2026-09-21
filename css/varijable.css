@@ -1,0 +1,76 @@
+/*
+  VARIJABLE.CSS
+  =============
+  Sve boje, razmaci, fontovi i zaobljenja na jednom mjestu. Za novog
+  klijenta obično je dovoljno promijeniti boje u prvom bloku — sve
+  ostalo (style.css) automatski prati te vrijednosti.
+*/
+
+:root {
+
+  /* ---------- BOJE ---------- */
+  /* Tamna, topla paleta s jednom naglasnom bojom. Promijenite
+     --boja-naglasak za brzu promjenu "identiteta" stranice. */
+
+  --boja-pozadina: #171310;          /* glavna tamna pozadina stranice */
+  --boja-pozadina-svjetlija: #1f1a15; /* pozadina naizmjeničnih sekcija, kartica */
+  --boja-povrsina: #262019;          /* pozadina kartica jelovnika, obrazaca */
+  --boja-obrub: #3a3128;             /* tanke linije, obrubi kartica */
+
+  --boja-tekst: #f3ede3;             /* glavni tekst na tamnoj pozadini */
+  --boja-tekst-prigusen: #b9ac98;    /* sporedni tekst, opisi, meta info */
+
+  --boja-naglasak: #c9974a;          /* glavna naglasna boja (gumbi, linkovi, ikone) */
+  --boja-naglasak-tamnija: #a97b34;  /* hover/active stanje naglasne boje */
+  --boja-naglasak-tekst: #171310;    /* tekst koji stoji NA naglasnoj boji (npr. u gumbu) */
+
+  --boja-uspjeh: #6a9955;            /* poruke o uspjehu u obrascu rezervacije */
+  --boja-greska: #c9604a;            /* poruke o grešci u obrascu rezervacije */
+
+  /* ---------- TIPOGRAFIJA ---------- */
+  /* Sistemski font stack — bez vanjskih fontova, radi bez interneta. */
+
+  --font-naslovi: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+  --font-tekst: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --velicina-h1: clamp(2.4rem, 6vw, 4.2rem);
+  --velicina-h2: clamp(1.8rem, 4vw, 2.8rem);
+  --velicina-h3: clamp(1.2rem, 2.5vw, 1.5rem);
+  --velicina-tekst: 1rem;
+  --velicina-tekst-mali: 0.875rem;
+
+  --visina-retka: 1.65;
+
+  /* ---------- RAZMACI ---------- */
+  /* Koristi se kroz gap i padding umjesto fiksnih margina, da sekcije
+     ostanu neovisne jedna o drugoj i da ih je lako premjestiti. */
+
+  --razmak-xs: 0.5rem;
+  --razmak-s: 1rem;
+  --razmak-m: 1.5rem;
+  --razmak-l: 2.5rem;
+  --razmak-xl: 4rem;
+  --razmak-xxl: 6rem;
+
+  --sirina-sadrzaja: 1180px;
+  --odmak-rub: 1.25rem; /* razmak od ruba ekrana na mobitelu */
+
+  /* ---------- OBLIK ---------- */
+  --zaobljenje-s: 6px;
+  --zaobljenje-m: 12px;
+  --zaobljenje-l: 20px;
+
+  --sjena-kartica: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --sjena-zaglavlje: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  /* ---------- OMJERI SLIKA ---------- */
+  /* Rezerviraju prostor prije nego se slika učita, da se raspored ne pomiče. */
+  --omjer-hero: 16 / 9;
+  --omjer-jelo: 4 / 3;
+  --omjer-galerija: 1 / 1;
+  --omjer-o-nama: 4 / 5;
+
+  /* ---------- TRAJANJE ANIMACIJA ---------- */
+  --trajanje-brzo: 0.2s;
+  --trajanje-sporo: 0.7s;
+}

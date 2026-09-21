@@ -1,0 +1,8 @@
+﻿# Local/editor files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local environment and credentials
+.env
+.env.*

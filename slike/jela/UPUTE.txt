@@ -1,0 +1,14 @@
+FOTOGRAFIJE JELA
+=================
+
+predjelo-1.jpg  - dalmatinska plata
+predjelo-2.jpg  - burrata s rajčicom
+predjelo-3.jpg  - bruschette s kozicama
+glavno-1.jpg    - crni rižoto od sipe
+glavno-2.jpg    - brancin sa žara
+glavno-3.jpg    - pašticada s njokima
+desert-1.jpg    - domaća rožata
+desert-2.jpg    - torta od smokava
+
+Ako dodajes novo jelo, prvo dodaj fotografiju ovde, pa zatim upisi
+istu putanju u js/podaci.js.
