@@ -694,6 +694,61 @@ textarea:focus-visible {
   justify-content: center;
 }
 
+.rez-koraci {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: var(--razmak-l);
+}
+
+.rez-koraci > i {
+  flex: 1;
+  height: 1px;
+  background: var(--boja-obrub);
+}
+
+.rez-korak {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  color: var(--boja-tekst-prigusen);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.rez-korak small {
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.rez-korak--aktivan {
+  color: var(--boja-naglasak);
+}
+
+.rez-korak-sadrzaj[hidden] {
+  display: none;
+}
+
+.rez-korak__naslov {
+  margin-bottom: var(--razmak-m);
+  color: var(--boja-tekst);
+  font-family: var(--font-naslovi);
+  font-size: 1.45rem;
+}
+
+.rez-korak__gumbi {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--razmak-s);
+  align-items: center;
+}
+
+.rez-korak__gumbi .gumb {
+  width: 100%;
+}
+
 .rez-kalendar {
   padding: var(--razmak-s);
   background: var(--boja-pozadina);
@@ -2282,6 +2337,27 @@ body {
     line-height: 1.45;
   }
 
+  .rez-koraci {
+    margin-bottom: 1.25rem;
+  }
+
+  .rez-korak {
+    font-size: 0.72rem;
+  }
+
+  .rez-korak small {
+    font-size: 0.62rem;
+  }
+
+  .rez-korak__naslov {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .rez-korak__gumbi {
+    gap: 0.5rem;
+  }
+
   .obrazac {
     gap: 0.8rem;
   }
@@ -2459,6 +2535,87 @@ body {
   .plutajuce-mreze a {
     width: 2.5rem;
     height: 2.5rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .zaglavlje {
+    display: block !important;
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(8, 6, 5, 0.42), transparent);
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  .zaglavlje__unutra {
+    position: relative;
+    justify-content: center;
+    min-height: 5rem;
+    padding-block: 1rem;
+  }
+
+  .zaglavlje__naziv {
+    color: rgba(255, 249, 238, 0.95);
+    font-family: var(--font-tekst);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+  }
+
+  .hamburger {
+    display: flex !important;
+    position: absolute;
+    right: var(--odmak-rub);
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .izbornik {
+    display: none !important;
+  }
+
+  .izbornik.izbornik--otvoren {
+    position: fixed;
+    top: 4.75rem;
+    right: var(--odmak-rub);
+    bottom: auto;
+    left: auto;
+    width: min(21rem, calc(100vw - 2rem));
+    max-height: calc(100vh - 6rem);
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 0.25rem;
+    padding: 1.2rem;
+    background: #171310;
+    border: 1px solid var(--boja-obrub);
+    border-radius: var(--zaobljenje-m);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    white-space: normal;
+    transform: translateX(0);
+  }
+
+  .izbornik.izbornik--otvoren .izbornik__stavka {
+    display: block;
+    width: 100%;
+    flex: 0 0 auto;
+    color: var(--boja-tekst);
+    font-family: var(--font-naslovi);
+    font-size: 1.15rem;
+    line-height: 1.2;
+    border-bottom: 1px solid var(--boja-obrub);
+    padding: 0.8rem 0.6rem;
+  }
+
+  .izbornik.izbornik--otvoren .izbornik__stavka:hover,
+  .izbornik.izbornik--otvoren .izbornik__stavka:focus-visible {
+    color: var(--boja-naglasak);
+    border-bottom-color: var(--boja-naglasak);
   }
 }
 

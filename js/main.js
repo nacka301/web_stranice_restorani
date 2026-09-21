@@ -115,6 +115,12 @@ function pokreniHamburger() {
     gumb.setAttribute("aria-expanded", String(otvoren));
     gumb.setAttribute("aria-label", otvoren ? "Zatvori izbornik" : "Otvori izbornik");
   });
+
+  window.addEventListener("scroll", () => {
+    if (izbornik.classList.contains("izbornik--otvoren")) {
+      zatvoriIzbornik();
+    }
+  }, { passive: true });
 }
 
 function zatvoriIzbornik() {
@@ -393,30 +399,47 @@ function izgradiObrazacRezervacije(nacin) {
   obrazac.noValidate = true;
 
   obrazac.innerHTML = `
-    <div class="obrazac__polje">
-      <label for="rez-ime">Ime i prezime *</label>
-      <input type="text" id="rez-ime" name="ime" autocomplete="name">
+    <div class="rez-koraci" aria-label="Korak rezervacije">
+      <span class="rez-korak rez-korak--aktivan" data-korak="1">01 <small>Podaci</small></span>
+      <i></i>
+      <span class="rez-korak" data-korak="2">02 <small>Termin</small></span>
     </div>
-    <div class="obrazac__polje">
-      <label for="rez-broj-gostiju">Broj osoba *</label>
-      <input type="number" id="rez-broj-gostiju" name="brojGostiju" min="1" max="50" inputmode="numeric" placeholder="Unesite broj osoba">
+    <div class="rez-korak-sadrzaj rez-korak-sadrzaj--aktivan" data-sadrzaj="1">
+      <p class="rez-korak__naslov">Kako da vas kontaktiramo?</p>
+      <div class="obrazac__polje">
+        <label for="rez-ime">Ime i prezime *</label>
+        <input type="text" id="rez-ime" name="ime" autocomplete="name" placeholder="Vaše ime i prezime">
+      </div>
+      <div class="obrazac__polje">
+        <label for="rez-telefon">Broj mobitela *</label>
+        <input type="tel" id="rez-telefon" name="telefon" autocomplete="tel" inputmode="tel" placeholder="099 123 4567">
+      </div>
+      <button type="button" class="gumb gumb--puni gumb--puna-sirina" id="rez-nastavi">Nastavi na odabir termina →</button>
     </div>
-    <div class="obrazac__polje">
-      <label>Odaberite datum *</label>
-      <div class="rez-kalendar" id="rez-kalendar"></div>
-    </div>
-    <div class="obrazac__polje" id="rez-termini-polje" hidden>
-      <label>Slobodni termini</label>
-      <div class="termini-lista" id="rez-termini-lista"></div>
-    </div>
-    <div class="obrazac__polje">
-      <label for="rez-napomena">Napomena</label>
-      <textarea id="rez-napomena" name="napomena" rows="3"></textarea>
+    <div class="rez-korak-sadrzaj" data-sadrzaj="2" hidden>
+      <p class="rez-korak__naslov">Odaberite stol</p>
+      <div class="obrazac__polje">
+        <label for="rez-broj-gostiju">Broj osoba *</label>
+        <input type="number" id="rez-broj-gostiju" name="brojGostiju" min="1" max="50" inputmode="numeric" placeholder="Unesite broj osoba">
+      </div>
+      <div class="obrazac__polje">
+        <label>Odaberite datum *</label>
+        <div class="rez-kalendar" id="rez-kalendar"></div>
+      </div>
+      <div class="obrazac__polje" id="rez-termini-polje" hidden>
+        <label>Slobodni termini</label>
+        <div class="termini-lista" id="rez-termini-lista"></div>
+      </div>
+      <div class="obrazac__polje">
+        <label for="rez-napomena">Napomena</label>
+        <textarea id="rez-napomena" name="napomena" rows="3" placeholder="Posebna napomena (opcionalno)"></textarea>
+      </div>
+      <div class="rez-korak__gumbi">
+        <button type="button" class="gumb gumb--obris" id="rez-nazad">← Nazad</button>
+        <button type="submit" class="gumb gumb--puni">${nacin === "whatsapp" ? "Pošalji putem WhatsAppa" : "Pošalji e-mail"}</button>
+      </div>
     </div>
     <div class="obrazac__poruka" id="rez-poruka"></div>
-    <button type="submit" class="gumb gumb--puni gumb--puna-sirina">
-      ${nacin === "whatsapp" ? "Pošalji upit putem WhatsAppa" : "Pošalji upit e-mailom"}
-    </button>
   `;
 
   const odabrani = {
@@ -428,6 +451,32 @@ function izgradiObrazacRezervacije(nacin) {
   const kalendar = obrazac.querySelector("#rez-kalendar");
   const terminiPolje = obrazac.querySelector("#rez-termini-polje");
   const terminiLista = obrazac.querySelector("#rez-termini-lista");
+  const korakPrvi = obrazac.querySelector('[data-sadrzaj="1"]');
+  const korakDrugi = obrazac.querySelector('[data-sadrzaj="2"]');
+  const poruka = obrazac.querySelector("#rez-poruka");
+
+  obrazac.querySelector("#rez-nastavi").addEventListener("click", () => {
+    const ime = obrazac.ime.value.trim();
+    const telefon = obrazac.telefon.value.trim();
+    if (!ime) {
+      prikaziPorukuObrasca(poruka, "Molimo unesite ime i prezime.", "greska");
+      return;
+    }
+    if (!telefon) {
+      prikaziPorukuObrasca(poruka, "Molimo unesite broj mobitela.", "greska");
+      return;
+    }
+    korakPrvi.hidden = true;
+    korakDrugi.hidden = false;
+    obrazac.querySelectorAll(".rez-korak").forEach((korak) => korak.classList.toggle("rez-korak--aktivan", korak.dataset.korak === "2"));
+    poruka.className = "obrazac__poruka";
+  });
+
+  obrazac.querySelector("#rez-nazad").addEventListener("click", () => {
+    korakDrugi.hidden = true;
+    korakPrvi.hidden = false;
+    obrazac.querySelectorAll(".rez-korak").forEach((korak) => korak.classList.toggle("rez-korak--aktivan", korak.dataset.korak === "1"));
+  });
 
   napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju);
   brojGostiju.addEventListener("input", () => {
@@ -553,6 +602,7 @@ function prikaziTermine(odabrani, omot, lista, brojGostiju) {
 function posaljiRezervaciju(obrazac, nacin, odabrani) {
   const poruka = obrazac.querySelector("#rez-poruka");
   const ime = obrazac.ime.value.trim();
+  const telefon = obrazac.telefon.value.trim();
   const brojGostiju = obrazac.brojGostiju.value.trim();
   const datum = odabrani.datum;
   const vrijeme = odabrani.vrijeme;
@@ -571,6 +621,7 @@ function posaljiRezervaciju(obrazac, nacin, odabrani) {
   let tekstPoruke =
     `Rezervacija stola\n` +
     `Ime: ${ime}\n` +
+    `Telefon: ${telefon}\n` +
     `Broj osoba: ${brojGostiju}\n` +
     `Datum: ${datum}` + (vrijeme ? ` u ${vrijeme}` : "") + `\n`;
   if (napomena) tekstPoruke += `Napomena: ${napomena}\n`;
