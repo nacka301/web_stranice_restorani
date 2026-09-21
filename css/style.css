@@ -751,6 +751,7 @@ textarea:focus-visible {
   font-family: var(--font-naslovi);
   font-size: 1.3rem;
   letter-spacing: -0.02em;
+  text-align: center;
 }
 
 .rez-korak__gumbi {
