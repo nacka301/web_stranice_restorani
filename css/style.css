@@ -753,6 +753,48 @@ textarea:focus-visible {
   width: 100%;
 }
 
+@media (min-width: 960px) {
+  .rezervacija__kartica {
+    max-width: 38rem;
+    padding: 2.25rem 2.5rem;
+  }
+
+  .rezervacija__zaglavlje {
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .rezervacija__naslov {
+    font-size: clamp(2.35rem, 4vw, 3.25rem);
+    line-height: 1;
+  }
+
+  .rezervacija__opis {
+    max-width: 28rem;
+    margin-inline: auto;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .rez-koraci {
+    margin-bottom: 1.5rem;
+  }
+
+  .rez-korak-sadrzaj {
+    max-width: 100%;
+  }
+
+  .rez-korak__naslov {
+    margin-bottom: 1.25rem;
+    text-align: center;
+    font-size: 1.3rem;
+  }
+
+  .obrazac {
+    gap: 1rem;
+  }
+}
+
 .rez-kalendar {
   padding: var(--razmak-s);
   background: var(--boja-pozadina);
