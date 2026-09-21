@@ -22,12 +22,12 @@ const PODACI = {
   logo: "",
 
   // ---------- KONTAKT ----------
-  adresa: "Obala 12, 21000 Split",
+  adresa: "Riva 10, 21450 Hvar",
   telefon: "+385 91 234 5678",
   email: "info@primjer.hr",
 
   // Poveznica za Google karte (gumb "Otvori u Google kartama")
-  googleKarta: "https://maps.google.com/?q=Konoba+Maslina+Split",
+  googleKarta: "https://www.google.com/maps/search/?api=1&query=Konoba+Maslina%2C+Riva+10%2C+21450+Hvar",
 
   // ---------- DRUŠTVENE MREŽE ----------
   facebook: "https://facebook.com/",
