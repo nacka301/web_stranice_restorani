@@ -1761,6 +1761,40 @@ body {
   border-radius: 50%;
 }
 
+@media (min-width: 960px) {
+  .kontakt {
+    text-align: center;
+  }
+
+  .kontakt .kontejner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .kontakt__oznaka,
+  .kontakt__naslov,
+  .kontakt__uvod {
+    text-align: center;
+  }
+
+  .kontakt__uvod {
+    margin-inline: auto;
+  }
+
+  .kontakt__podaci {
+    justify-content: center;
+  }
+
+  .kontakt__akcija {
+    align-self: center;
+  }
+
+  .kontakt__mreze {
+    justify-content: center;
+  }
+}
+
 .podnozje {
   text-align: center;
   border-top-color: var(--boja-obrub);
