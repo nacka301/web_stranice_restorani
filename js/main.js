@@ -400,24 +400,12 @@ function izgradiObrazacRezervacije(nacin) {
 
   obrazac.innerHTML = `
     <div class="rez-koraci" aria-label="Korak rezervacije">
-      <span class="rez-korak rez-korak--aktivan" data-korak="1">01 <small>Podaci</small></span>
+      <span class="rez-korak rez-korak--aktivan" data-korak="1">01 <small>Termin</small></span>
       <i></i>
-      <span class="rez-korak" data-korak="2">02 <small>Termin</small></span>
+      <span class="rez-korak" data-korak="2">02 <small>Podaci</small></span>
     </div>
     <div class="rez-korak-sadrzaj rez-korak-sadrzaj--aktivan" data-sadrzaj="1">
-      <p class="rez-korak__naslov">Kako da vas kontaktiramo?</p>
-      <div class="obrazac__polje">
-        <label for="rez-ime">Ime i prezime *</label>
-        <input type="text" id="rez-ime" name="ime" autocomplete="name" placeholder="Vaše ime i prezime">
-      </div>
-      <div class="obrazac__polje">
-        <label for="rez-telefon">Broj mobitela *</label>
-        <input type="tel" id="rez-telefon" name="telefon" autocomplete="tel" inputmode="tel" placeholder="099 123 4567">
-      </div>
-      <button type="button" class="gumb gumb--puni gumb--puna-sirina" id="rez-nastavi">Nastavi na odabir termina →</button>
-    </div>
-    <div class="rez-korak-sadrzaj" data-sadrzaj="2" hidden>
-      <p class="rez-korak__naslov">Odaberite stol</p>
+      <p class="rez-korak__naslov">Pronađite slobodan termin</p>
       <div class="obrazac__polje">
         <label for="rez-broj-gostiju">Broj osoba *</label>
         <input type="number" id="rez-broj-gostiju" name="brojGostiju" min="1" max="50" inputmode="numeric" placeholder="Unesite broj osoba">
@@ -429,6 +417,18 @@ function izgradiObrazacRezervacije(nacin) {
       <div class="obrazac__polje" id="rez-termini-polje" hidden>
         <label>Slobodni termini</label>
         <div class="termini-lista" id="rez-termini-lista"></div>
+      </div>
+      <button type="button" class="gumb gumb--puni gumb--puna-sirina" id="rez-nastavi">Nastavi na podatke →</button>
+    </div>
+    <div class="rez-korak-sadrzaj" data-sadrzaj="2" hidden>
+      <p class="rez-korak__naslov">Još samo vaši podaci</p>
+      <div class="obrazac__polje">
+        <label for="rez-ime">Ime i prezime *</label>
+        <input type="text" id="rez-ime" name="ime" autocomplete="name" placeholder="Vaše ime i prezime">
+      </div>
+      <div class="obrazac__polje">
+        <label for="rez-telefon">Broj mobitela *</label>
+        <input type="tel" id="rez-telefon" name="telefon" autocomplete="tel" inputmode="tel" placeholder="099 123 4567">
       </div>
       <div class="obrazac__polje">
         <label for="rez-napomena">Napomena</label>
@@ -456,14 +456,17 @@ function izgradiObrazacRezervacije(nacin) {
   const poruka = obrazac.querySelector("#rez-poruka");
 
   obrazac.querySelector("#rez-nastavi").addEventListener("click", () => {
-    const ime = obrazac.ime.value.trim();
-    const telefon = obrazac.telefon.value.trim();
-    if (!ime) {
-      prikaziPorukuObrasca(poruka, "Molimo unesite ime i prezime.", "greska");
+    const broj = obrazac.brojGostiju.value.trim();
+    if (!broj || Number(broj) < 1) {
+      prikaziPorukuObrasca(poruka, "Molimo unesite broj osoba.", "greska");
       return;
     }
-    if (!telefon) {
-      prikaziPorukuObrasca(poruka, "Molimo unesite broj mobitela.", "greska");
+    if (!odabrani.datum) {
+      prikaziPorukuObrasca(poruka, "Molimo odaberite datum.", "greska");
+      return;
+    }
+    if (!odabrani.vrijeme) {
+      prikaziPorukuObrasca(poruka, "Molimo odaberite slobodan termin.", "greska");
       return;
     }
     korakPrvi.hidden = true;
@@ -611,6 +614,10 @@ function posaljiRezervaciju(obrazac, nacin, odabrani) {
   const greska = provjeriObrazacRezervacije(ime, brojGostiju, datum);
   if (greska) {
     prikaziPorukuObrasca(poruka, greska, "greska");
+    return;
+  }
+  if (!telefon) {
+    prikaziPorukuObrasca(poruka, "Molimo unesite broj mobitela.", "greska");
     return;
   }
   if (!vrijeme) {
