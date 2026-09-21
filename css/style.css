@@ -2734,6 +2734,40 @@ body {
   }
 }
 
+@media (min-width: 640px) {
+  .kontakt {
+    padding-block: 4.5rem;
+  }
+
+  .kontakt__oznaka {
+    margin-bottom: 0.6rem;
+  }
+
+  .kontakt__naslov {
+    margin-bottom: 0.55rem;
+    font-size: clamp(3.2rem, 6vw, 5.5rem);
+  }
+
+  .kontakt__uvod {
+    margin-bottom: 1.35rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .kontakt__podaci {
+    gap: 0.65rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .kontakt__podaci a {
+    padding: 0.8rem;
+  }
+
+  .kontakt__mreze {
+    margin-top: 1rem;
+  }
+}
+
 @media (max-width: 379px) {
   .jelovnik__mreza {
     grid-template-columns: 1fr;
