@@ -473,12 +473,18 @@ function izgradiObrazacRezervacije(nacin) {
     korakDrugi.hidden = false;
     obrazac.querySelectorAll(".rez-korak").forEach((korak) => korak.classList.toggle("rez-korak--aktivan", korak.dataset.korak === "2"));
     poruka.className = "obrazac__poruka";
+    requestAnimationFrame(() => {
+      korakDrugi.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
 
   obrazac.querySelector("#rez-nazad").addEventListener("click", () => {
     korakDrugi.hidden = true;
     korakPrvi.hidden = false;
     obrazac.querySelectorAll(".rez-korak").forEach((korak) => korak.classList.toggle("rez-korak--aktivan", korak.dataset.korak === "1"));
+    requestAnimationFrame(() => {
+      korakPrvi.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
 
   napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju);

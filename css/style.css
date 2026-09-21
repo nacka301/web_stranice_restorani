@@ -731,6 +731,10 @@ textarea:focus-visible {
   display: none !important;
 }
 
+.rez-korak-sadrzaj {
+  scroll-margin-top: 5rem;
+}
+
 .rez-korak__naslov {
   margin-bottom: var(--razmak-m);
   color: var(--boja-tekst);
