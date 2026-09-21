@@ -1245,6 +1245,22 @@ textarea:focus-visible {
   .info__mreza {
     grid-template-columns: 1fr 1fr;
     gap: var(--razmak-xl);
+    align-items: start;
+  }
+
+  .info__mreza > div,
+  .info__lokacija {
+    min-width: 0;
+  }
+
+  .info__lokacija {
+    align-self: start;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .info__lokacija .info__naslov {
+    margin-bottom: 0.5rem;
+    font-size: clamp(2rem, 3.5vw, 3.5rem);
   }
 }
 
