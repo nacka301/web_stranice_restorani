@@ -945,6 +945,77 @@ textarea:focus-visible {
   color: var(--boja-greska);
 }
 
+.rez-stolovi {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+  padding: 0.85rem;
+  background:
+    linear-gradient(rgba(201, 151, 74, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(201, 151, 74, 0.05) 1px, transparent 1px),
+    var(--boja-pozadina);
+  background-size: 2rem 2rem;
+  border: 1px solid var(--boja-obrub);
+  border-radius: var(--zaobljenje-m);
+}
+
+.rez-stol {
+  display: flex;
+  min-height: 4rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0.45rem;
+  background: rgba(106, 153, 85, 0.2);
+  border: 1px solid rgba(106, 153, 85, 0.7);
+  border-radius: 0.9rem;
+  color: #c8e9b9;
+  transition: background var(--trajanje-brzo) ease, border-color var(--trajanje-brzo) ease, transform var(--trajanje-brzo) ease;
+}
+
+.rez-stol--okrugli {
+  border-radius: 50%;
+}
+
+.rez-stol strong {
+  font-size: 1.1rem;
+}
+
+.rez-stol span {
+  font-size: 0.62rem;
+}
+
+.rez-stol:hover:not(:disabled) {
+  background: var(--boja-naglasak);
+  border-color: var(--boja-naglasak);
+  color: var(--boja-naglasak-tekst);
+  transform: translateY(-2px);
+}
+
+.rez-stol--odabran {
+  background: var(--boja-naglasak);
+  border-color: var(--boja-naglasak);
+  color: var(--boja-naglasak-tekst);
+  box-shadow: 0 0 0 3px rgba(201, 151, 74, 0.2);
+}
+
+.rez-stol--zauzet,
+.rez-stol--premalen {
+  background: rgba(201, 96, 74, 0.12);
+  border-color: rgba(201, 96, 74, 0.35);
+  color: var(--boja-greska);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.rez-stolovi__napomena {
+  margin-top: 0.55rem;
+  color: var(--boja-tekst-prigusen);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
 .obrazac {
   display: flex;
   flex-direction: column;
@@ -2502,6 +2573,16 @@ body {
 
   .rez-korak__gumbi {
     gap: 0.5rem;
+  }
+
+  .rez-stolovi {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
+    padding: 0.6rem;
+  }
+
+  .rez-stol {
+    min-height: 3.5rem;
   }
 
   .obrazac {

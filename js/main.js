@@ -418,6 +418,11 @@ function izgradiObrazacRezervacije(nacin) {
         <label>Slobodni termini</label>
         <div class="termini-lista" id="rez-termini-lista"></div>
       </div>
+      <div class="obrazac__polje" id="rez-stolovi-polje" hidden>
+        <label>Odaberite stol</label>
+        <div class="rez-stolovi" id="rez-stolovi"></div>
+        <p class="rez-stolovi__napomena">Odaberite stol koji odgovara vašem broju osoba.</p>
+      </div>
       <button type="button" class="gumb gumb--puni gumb--puna-sirina" id="rez-nastavi">Nastavi na podatke →</button>
     </div>
     <div class="rez-korak-sadrzaj" data-sadrzaj="2" hidden>
@@ -445,12 +450,15 @@ function izgradiObrazacRezervacije(nacin) {
   const odabrani = {
     datum: "",
     vrijeme: "",
+    stol: null,
   };
 
   const brojGostiju = obrazac.querySelector("#rez-broj-gostiju");
   const kalendar = obrazac.querySelector("#rez-kalendar");
   const terminiPolje = obrazac.querySelector("#rez-termini-polje");
   const terminiLista = obrazac.querySelector("#rez-termini-lista");
+  const stoloviPolje = obrazac.querySelector("#rez-stolovi-polje");
+  const stolovi = obrazac.querySelector("#rez-stolovi");
   const korakPrvi = obrazac.querySelector('[data-sadrzaj="1"]');
   const korakDrugi = obrazac.querySelector('[data-sadrzaj="2"]');
   const poruka = obrazac.querySelector("#rez-poruka");
@@ -467,6 +475,10 @@ function izgradiObrazacRezervacije(nacin) {
     }
     if (!odabrani.vrijeme) {
       prikaziPorukuObrasca(poruka, "Molimo odaberite slobodan termin.", "greska");
+      return;
+    }
+    if (!odabrani.stol) {
+      prikaziPorukuObrasca(poruka, "Molimo odaberite slobodan stol.", "greska");
       return;
     }
     korakPrvi.hidden = true;
@@ -489,9 +501,9 @@ function izgradiObrazacRezervacije(nacin) {
     });
   });
 
-  napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju);
+  napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi);
   brojGostiju.addEventListener("input", () => {
-    if (odabrani.datum) prikaziTermine(odabrani, terminiPolje, terminiLista, brojGostiju);
+    if (odabrani.datum) prikaziTermine(odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi);
   });
 
   obrazac.addEventListener("submit", (dogadjaj) => {
@@ -502,7 +514,7 @@ function izgradiObrazacRezervacije(nacin) {
   return obrazac;
 }
 
-function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju) {
+function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi) {
   const danas = new Date();
   danas.setHours(0, 0, 0, 0);
   let prikazaniMjesec = new Date(danas.getFullYear(), danas.getMonth(), 1);
@@ -566,8 +578,10 @@ function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, brojGos
       gumb.addEventListener("click", () => {
         odabrani.datum = datumTekst;
         odabrani.vrijeme = "";
+        odabrani.stol = null;
+        stoloviPolje.hidden = true;
         iscrtaj();
-        prikaziTermine(odabrani, terminiPolje, terminiLista, brojGostiju);
+        prikaziTermine(odabrani, terminiPolje, terminiLista, brojGostiju, stoloviPolje, stolovi);
       });
       dani.appendChild(gumb);
     }
@@ -589,7 +603,7 @@ function statusDana(datum, danas) {
   return "slobodno";
 }
 
-function prikaziTermine(odabrani, omot, lista, brojGostiju) {
+function prikaziTermine(odabrani, omot, lista, brojGostiju, stoloviPolje, stolovi) {
   omot.hidden = false;
   lista.innerHTML = "";
   const potrebno = Number(brojGostiju.value) || 1;
@@ -605,8 +619,46 @@ function prikaziTermine(odabrani, omot, lista, brojGostiju) {
       lista.querySelectorAll(".termin-opcija").forEach((stavka) => stavka.classList.remove("termin-opcija--odabran"));
       gumb.classList.add("termin-opcija--odabran");
       odabrani.vrijeme = vrijeme;
+      odabrani.stol = null;
+      prikaziStolove(odabrani, stoloviPolje, stolovi, brojGostiju);
     });
     lista.appendChild(gumb);
+  });
+}
+
+const STOLOVI = [
+  { broj: 1, kapacitet: 2, zona: "Uz prozor", oblik: "okrugli" },
+  { broj: 2, kapacitet: 2, zona: "Terasa", oblik: "okrugli" },
+  { broj: 3, kapacitet: 4, zona: "Unutarnji dio", oblik: "pravokutni" },
+  { broj: 4, kapacitet: 4, zona: "Uz prozor", oblik: "pravokutni" },
+  { broj: 5, kapacitet: 6, zona: "Unutarnji dio", oblik: "pravokutni" },
+  { broj: 6, kapacitet: 6, zona: "Terasa", oblik: "pravokutni" },
+  { broj: 7, kapacitet: 8, zona: "Unutarnji dio", oblik: "pravokutni" },
+];
+
+function prikaziStolove(odabrani, omot, spremnik, brojGostiju) {
+  omot.hidden = false;
+  spremnik.innerHTML = "";
+  const potrebno = Number(brojGostiju.value) || 1;
+  const kljucTermina = Number(odabrani.datum.slice(-2)) + Number(odabrani.vrijeme.replace(":", ""));
+
+  STOLOVI.forEach((stol) => {
+    const zauzet = (kljucTermina + stol.broj) % 7 === 0;
+    const neOdgovara = stol.kapacitet < potrebno;
+    const gumb = document.createElement("button");
+    gumb.type = "button";
+    gumb.className = "rez-stol rez-stol--" + stol.oblik;
+    gumb.disabled = zauzet || neOdgovara;
+    gumb.innerHTML = `<strong>${stol.broj}</strong><span>${stol.kapacitet} ${stol.kapacitet === 1 ? "osoba" : "osoba"}</span>`;
+    gumb.title = zauzet ? "Stol je zauzet" : neOdgovara ? `Stol je za najmanje ${stol.kapacitet} osoba` : `${stol.zona} — do ${stol.kapacitet} osoba`;
+    if (zauzet) gumb.classList.add("rez-stol--zauzet");
+    if (neOdgovara) gumb.classList.add("rez-stol--premalen");
+    gumb.addEventListener("click", () => {
+      spremnik.querySelectorAll(".rez-stol").forEach((stavka) => stavka.classList.remove("rez-stol--odabran"));
+      gumb.classList.add("rez-stol--odabran");
+      odabrani.stol = stol;
+    });
+    spremnik.appendChild(gumb);
   });
 }
 
@@ -632,12 +684,17 @@ function posaljiRezervaciju(obrazac, nacin, odabrani) {
     prikaziPorukuObrasca(poruka, "Molimo odaberite slobodan termin.", "greska");
     return;
   }
+  if (!odabrani.stol) {
+    prikaziPorukuObrasca(poruka, "Molimo odaberite slobodan stol.", "greska");
+    return;
+  }
 
   let tekstPoruke =
     `Rezervacija stola\n` +
     `Ime: ${ime}\n` +
     `Telefon: ${telefon}\n` +
     `Broj osoba: ${brojGostiju}\n` +
+    `Stol: ${odabrani.stol.broj} — do ${odabrani.stol.kapacitet} osoba (${odabrani.stol.zona})\n` +
     `Datum: ${datum}` + (vrijeme ? ` u ${vrijeme}` : "") + `\n`;
   if (napomena) tekstPoruke += `Napomena: ${napomena}\n`;
 
