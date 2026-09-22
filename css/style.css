@@ -249,6 +249,12 @@ textarea:focus-visible {
   transform: translateY(0);
 }
 
+/* Ne crtamo udaljene sekcije dok korisnik ne dođe do njih. */
+main > section:not(#naslovnica) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 720px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pojavi {
     opacity: 1;

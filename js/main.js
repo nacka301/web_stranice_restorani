@@ -12,6 +12,7 @@
 */
 
 document.addEventListener("DOMContentLoaded", () => {
+  pokreniLijenoUcitavanjeSlika();
   postaviZaglavlje();
   postaviNaslovnicu();
   postaviONama();
@@ -31,6 +32,28 @@ document.addEventListener("DOMContentLoaded", () => {
   pokreniAnimacijuPojavljivanja();
 });
 
+let promatracLijenihSlika = null;
+
+function pokreniLijenoUcitavanjeSlika() {
+  if (!("IntersectionObserver" in window)) return;
+
+  promatracLijenihSlika = new IntersectionObserver(
+    (unosi, promatrac) => {
+      unosi.forEach((unos) => {
+        if (!unos.isIntersecting) return;
+        const slika = unos.target;
+        const putanja = slika.dataset.src;
+        if (putanja) {
+          slika.src = putanja;
+          delete slika.dataset.src;
+        }
+        promatrac.unobserve(slika);
+      });
+    },
+    { rootMargin: "80px 0px" }
+  );
+}
+
 /* ============================================================
    POMOĆNE FUNKCIJE
    Male funkcije koje ponovno koristimo na više mjesta, da se
@@ -48,8 +71,15 @@ function el(id) {
 function postaviSliku(imgElement, putanja, altTekst) {
   if (!imgElement) return;
   if (!putanja) return;
-  imgElement.src = putanja;
   imgElement.alt = altTekst || "";
+  imgElement.decoding = "async";
+  if (imgElement.loading === "lazy") imgElement.fetchPriority = "low";
+  if (imgElement.loading === "lazy" && promatracLijenihSlika) {
+    imgElement.dataset.src = putanja;
+    promatracLijenihSlika.observe(imgElement);
+  } else {
+    imgElement.src = putanja;
+  }
   // Ako datoteka ne postoji (klijent je još nije ubacio), sakrij
   // sliku da se vidi uredni placeholder ispod nje.
   imgElement.addEventListener("error", () => {
