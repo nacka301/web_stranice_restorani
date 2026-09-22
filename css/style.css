@@ -3071,3 +3071,94 @@ body {
     font-size: 1.2rem;
   }
 }
+
+/* Zavrsna tipografska i vizualna dorada sekcije "O nama". */
+.o-nama__mreza {
+  gap: clamp(2rem, 5vw, 5rem);
+}
+
+.o-nama__slika {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border: 1px solid rgba(214, 171, 99, 0.3);
+  border-radius: 1.5rem 1.5rem 1.5rem 0.35rem;
+  box-shadow: 0.75rem 0.75rem 0 rgba(214, 171, 99, 0.12);
+  overflow: hidden;
+}
+
+.o-nama__slika::after {
+  content: "";
+  position: absolute;
+  inset: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 1.1rem 1.1rem 1.1rem 0.15rem;
+  pointer-events: none;
+}
+
+.o-nama__slika img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transform: scale(1.01);
+}
+
+.o-nama__naslov {
+  max-width: 13ch;
+  margin-bottom: 1.25rem;
+  font-size: clamp(2.15rem, 4.5vw, 4.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+}
+
+.o-nama__tekst {
+  max-width: 31rem;
+  margin-top: 0;
+  color: rgba(247, 239, 226, 0.72);
+  font-family: var(--font-tekst);
+  font-size: clamp(0.92rem, 1.2vw, 1.02rem);
+  line-height: 1.72;
+  letter-spacing: 0;
+}
+
+.o-nama__tekst::before {
+  content: "Naša priča";
+  display: block;
+  margin-bottom: 0.9rem;
+  color: var(--boja-naglasak);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.o-nama__tekst p:first-child::first-letter {
+  float: none;
+  margin: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+.o-nama__tekst p + p {
+  margin-top: 1rem;
+}
+
+@media (max-width: 959px) {
+  .o-nama__slika {
+    box-shadow: 0.5rem 0.5rem 0 rgba(214, 171, 99, 0.12);
+  }
+
+  .o-nama__naslov {
+    max-width: 12ch;
+    font-size: clamp(2rem, 9vw, 3rem);
+  }
+
+  .o-nama__tekst {
+    max-width: 34rem;
+    font-size: 0.96rem;
+    line-height: 1.65;
+  }
+}
