@@ -129,6 +129,11 @@ Stranica je statična i nema poslužitelj — ni u jednom načinu rada podaci
 se ne šalju nikamo osim u tu jednu poveznicu (`tel:`, `wa.me` ili
 `mailto:`) koju otvara preglednik.
 
+Za demo prije slanja klijentu obavezno zamijenite WhatsApp broj, e-mail,
+Instagram i Facebook poveznice u `js/podaci.js`. Trenutni podaci su samo
+konfiguracija primjera. Ovaj MVP šalje zahtjev za rezervaciju; ne zaključava
+stol u stvarnom vremenu i ne provjerava paralelne rezervacije u bazi.
+
 ---
 
 ## Kako je organiziran CSS i gdje ćete najčešće nešto mijenjati

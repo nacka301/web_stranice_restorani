@@ -313,6 +313,7 @@ function izgradiKarticuJela(stavka, nazivKategorije) {
   if (stavka.slika) {
     const omotSlike = document.createElement("div");
     omotSlike.className = "media-rezervat media-rezervat--tiho jelo-kartica__slika";
+    omotSlike.dataset.oznaka = stavka.naziv;
     const slika = document.createElement("img");
     slika.loading = "lazy";
     omotSlike.appendChild(slika);
@@ -590,7 +591,11 @@ function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, stolovi
       gumb.className = "rez-kalendar__dan rez-kalendar__dan--" + status;
       gumb.textContent = String(dan);
       gumb.disabled = status !== "slobodno";
-      gumb.title = status === "slobodno" ? "Ima slobodnih termina" : "Nema slobodnih termina";
+      gumb.title = status === "slobodno"
+        ? "Ima slobodnih termina"
+        : status === "proslo"
+          ? "Ovaj datum je prošao"
+          : "Nema slobodnih termina";
       if (datumTekst === odabrani.datum) gumb.classList.add("rez-kalendar__dan--odabran");
       gumb.addEventListener("click", () => {
         odabrani.datum = datumTekst;
@@ -606,7 +611,7 @@ function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, stolovi
     kalendar.appendChild(dani);
     const legenda = document.createElement("div");
     legenda.className = "rez-kalendar__legenda";
-    legenda.innerHTML = '<span><i class="legenda--slobodno"></i> Ima mjesta</span><span><i class="legenda--puno"></i> Popunjeno</span>';
+    legenda.innerHTML = '<span><i class="legenda--slobodno"></i> Ima mjesta</span><span><i class="legenda--puno"></i> Popunjeno</span><span><i class="legenda--proslo"></i> Prošlo</span>';
     kalendar.appendChild(legenda);
   };
 
@@ -614,7 +619,8 @@ function napraviKalendar(kalendar, odabrani, terminiPolje, terminiLista, stolovi
 }
 
 function statusDana(datum, danas) {
-  if (datum < danas || datum.getDay() === 0) return "puno";
+  if (datum < danas) return "proslo";
+  if (datum.getDay() === 0) return "puno";
   // Demo raspored: povremeno popunjen dan da se vide oba stanja u MVP-u.
   if (datum.getDate() % 7 === 0 || datum.getDate() % 11 === 0) return "puno";
   return "slobodno";
@@ -683,6 +689,8 @@ function prikaziStolove(odabrani, omot, spremnik) {
       spremnik.querySelectorAll(".rez-stol").forEach((stavka) => stavka.classList.remove("rez-stol--odabran"));
       gumb.classList.add("rez-stol--odabran");
       odabrani.stol = stol;
+      const napomena = omot.parentElement.querySelector(".rez-stolovi__napomena");
+      if (napomena) napomena.textContent = `Odabran je stol ${stol.broj} — ${stol.zona}.`;
     });
     spremnik.appendChild(gumb);
   });
