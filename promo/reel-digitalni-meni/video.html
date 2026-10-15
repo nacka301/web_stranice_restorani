@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="hr">
+<head>
+<meta charset="utf-8">
+<title>VP Solutions — Digitalni meni (reel 20 s)</title>
+<!--
+  20-sekundni vertikalni reel (1080x1920). Kompozicija je potpuno
+  deterministička: renderAt(t) postavlja izgled svakog elementa za
+  trenutak t (u sekundama), pa tools/render.js može snimiti sličicu
+  po sličicu. Nema CSS animacija ni tranzicija.
+  Pregled u pregledniku: otvori datoteku (reproducira se u realnom
+  vremenu), ?t=5.2 zamrzne kadar, ?safe=1 prikaže sigurnu zonu.
+-->
+<style>
+@font-face{font-family:"Gelasio";src:url(fonts/gelasio-latin-400-normal.woff2) format("woff2");font-weight:400;font-style:normal;font-display:block;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"Gelasio";src:url(fonts/gelasio-latin-ext-400-normal.woff2) format("woff2");font-weight:400;font-style:normal;font-display:block;unicode-range:U+0100-02AF,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Gelasio";src:url(fonts/gelasio-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"Gelasio";src:url(fonts/gelasio-latin-ext-700-normal.woff2) format("woff2");font-weight:700;font-style:normal;font-display:block;unicode-range:U+0100-02AF,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"Gelasio";src:url(fonts/gelasio-latin-700-italic.woff2) format("woff2");font-weight:700;font-style:italic;font-display:block;unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"Gelasio";src:url(fonts/gelasio-latin-ext-700-italic.woff2) format("woff2");font-weight:700;font-style:italic;font-display:block;unicode-range:U+0100-02AF,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:block;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-ext-600-normal.woff2) format("woff2");font-weight:600;font-display:block;unicode-range:U+0100-02AF,U+1E00-1EFF}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:block;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-ext-700-normal.woff2) format("woff2");font-weight:700;font-display:block;unicode-range:U+0100-02AF,U+1E00-1EFF}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-800-normal.woff2) format("woff2");font-weight:800;font-display:block;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-ext-800-normal.woff2) format("woff2");font-weight:800;font-display:block;unicode-range:U+0100-02AF,U+1E00-1EFF}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-900-normal.woff2) format("woff2");font-weight:900;font-display:block;unicode-range:U+0000-00FF,U+2000-206F,U+20AC,U+2122,U+2212}
+@font-face{font-family:"InterV";src:url(fonts/inter-latin-ext-900-normal.woff2) format("woff2");font-weight:900;font-display:block;unicode-range:U+0100-02AF,U+1E00-1EFF}
+
+/* Boje i fontovi preuzeti sa stranice (css/varijable.css + style.css). */
+:root{
+  --bg:#171310; --bg-deep:#100d0b; --bg2:#1f1a15; --surface:#262019; --border:#3a3128;
+  --text:#f3ede3; --muted:#b9ac98;
+  --gold:#d6ab63; --gold-d:#b88742; --gold-l:#ecca8c; --on-gold:#171310;
+  --serif:"Gelasio",Georgia,"Iowan Old Style",serif;
+  --sans:"InterV","Inter",-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}
+body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+#stage{position:absolute;left:0;top:0;width:1080px;height:1920px;overflow:hidden;background:var(--bg-deep);color:var(--text);font-family:var(--sans)}
+.abs{position:absolute;left:0;top:0}
+.full{position:absolute;inset:0}
+.hid{visibility:hidden}
+
+/* ---------- pozadina ---------- */
+#bgbase{background:radial-gradient(120% 70% at 50% 45%, #1d1814 0%, #141110 55%, #0b0907 100%)}
+#bgPhoto{position:absolute;left:-60px;top:-60px;width:1200px;height:2040px;object-fit:cover;filter:grayscale(1) contrast(1.25) brightness(.85);opacity:0}
+#bgPhotoShade{background:linear-gradient(180deg, rgba(11,9,7,.92) 0%, rgba(11,9,7,.35) 35%, rgba(11,9,7,.45) 65%, rgba(11,9,7,.95) 100%);opacity:0}
+#grid{position:absolute;left:0;top:-72px;width:1080px;height:2064px;
+  background:linear-gradient(rgba(214,171,99,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(214,171,99,.055) 1px,transparent 1px);
+  background-size:72px 72px;background-position:-18px 0;
+  -webkit-mask-image:radial-gradient(70% 55% at 50% 50%,#000 30%,transparent 100%)}
+.blob{position:absolute;left:0;top:0;width:1000px;height:1000px;margin:-500px 0 0 -500px;border-radius:50%;
+  background:radial-gradient(closest-side,rgba(214,171,99,.42),rgba(214,171,99,.12) 45%,rgba(214,171,99,0) 100%)}
+.blob.b2{background:radial-gradient(closest-side,rgba(184,135,66,.38),rgba(184,135,66,.10) 50%,rgba(184,135,66,0) 100%)}
+.pt{position:absolute;left:0;top:0;border-radius:50%}
+#vignette{background:radial-gradient(85% 60% at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
+#grain{background:url(assets/grain.png);background-size:256px 256px;mix-blend-mode:overlay;opacity:.07;pointer-events:none}
+#flash{background:radial-gradient(60% 40% at 50% 50%,rgba(236,202,140,.55),rgba(214,171,99,.15) 60%,rgba(214,171,99,0));opacity:0;mix-blend-mode:screen}
+#streak{position:absolute;left:0;top:-500px;width:520px;height:2920px;
+  background:linear-gradient(90deg,rgba(214,171,99,0) 0%,rgba(214,171,99,.18) 30%,rgba(255,241,214,.65) 50%,rgba(214,171,99,.18) 70%,rgba(214,171,99,0) 100%);
+  mix-blend-mode:screen;filter:blur(18px);opacity:0}
+#safe{display:none;pointer-events:none}
+#safe.on{display:block}
+#safe div{position:absolute;left:0;width:1080px;background:rgba(255,0,80,.18);border-color:rgba(255,0,80,.9);border-style:dashed;border-width:0}
+
+/* ---------- tipografija ---------- */
+.serif{font-family:var(--serif);font-weight:700}
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding:.16em .05em .22em;margin:-.16em -.05em -.22em}
+.wi{display:inline-block;will-change:transform}
+.g{color:var(--gold)}
+.gi{color:var(--gold);font-style:italic}
+
+/* ---------- hook ---------- */
+#bell{position:absolute;left:440px;top:560px;width:200px;height:170px;transform-origin:100px 150px}
+#hook{position:absolute;left:0;top:772px;width:1080px;text-align:center;font-family:var(--serif);font-weight:700;font-size:140px;line-height:1.0;letter-spacing:-.02em}
+#hook .line{display:block;white-space:nowrap}
+#hook .hw{display:inline-block;transform-origin:50% 60%}
+#hookL3{color:var(--gold);font-style:italic;text-shadow:0 0 40px rgba(214,171,99,.45)}
+
+/* ---------- logo (vpsolutions: znak "V" + riječ) ---------- */
+.logo{position:absolute;left:0;width:1080px;display:flex;justify-content:center;align-items:center}
+.logo .lk{display:flex;align-items:center;gap:.57em}
+.mark{position:relative;width:1.7em;height:1.7em;border-radius:.51em;display:grid;place-items:center;overflow:hidden;
+  background:linear-gradient(145deg,#f0d29a 0%,#d6ab63 45%,#a87a3c 100%);color:var(--on-gold);
+  font-family:var(--sans);font-weight:800;font-size:1em;box-shadow:0 0 .6em rgba(214,171,99,.45),inset 0 .04em 0 rgba(255,255,255,.5)}
+.mark span{font-size:.97em;line-height:1;transform:translateY(.02em)}
+.mark .sheen{position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));transform:rotate(20deg)}
+.word{font-family:var(--sans);font-weight:600;letter-spacing:-.025em;line-height:1;padding:.1em 0 .14em;
+  background:linear-gradient(100deg,var(--text) 0%,var(--text) 42%,#fff6dd 50%,var(--text) 58%,var(--text) 100%);background-size:300% 100%;background-position:100% 0;
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+#logoA{top:0;height:1920px;font-size:100px}
+#burst1,#burst2{position:absolute;left:540px;top:960px;width:240px;height:240px;margin:-120px 0 0 -120px;border-radius:50%;border:4px solid rgba(214,171,99,.9);box-shadow:0 0 40px rgba(214,171,99,.6),inset 0 0 30px rgba(214,171,99,.4)}
+#burst2{border-width:2px}
+#logoGlow{position:absolute;left:540px;top:960px;width:1100px;height:700px;margin:-350px 0 0 -550px;border-radius:50%;background:radial-gradient(closest-side,rgba(214,171,99,.35),rgba(214,171,99,0));opacity:0}
+
+/* ---------- setup ---------- */
+#setup{position:absolute;left:40px;top:706px;width:1000px;text-align:center;font-family:var(--serif);font-weight:700;font-size:88px;line-height:1.1;letter-spacing:-.015em}
+#setup .line{display:block;white-space:nowrap}
+#setupUl{position:absolute;left:0;top:0;width:1080px;height:40px;overflow:visible}
+
+/* ---------- koraci ---------- */
+.slabel{position:absolute;left:0;top:300px;width:1080px;display:flex;justify-content:center;align-items:center;gap:22px;font-family:var(--sans);font-weight:800;font-size:33px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+.slabel .num{font-weight:900;color:var(--on-gold);background:var(--gold);border-radius:12px;padding:6px 12px 6px 14px;letter-spacing:.06em;box-shadow:0 0 26px rgba(214,171,99,.45)}
+.slabel .bar{width:56px;height:3px;background:linear-gradient(90deg,var(--gold),rgba(214,171,99,.2));border-radius:2px;transform-origin:0 50%}
+.cap{position:absolute;left:30px;top:378px;width:1020px;text-align:center;font-family:var(--serif);font-weight:700;font-size:66px;line-height:1.12;letter-spacing:-.012em;text-shadow:0 4px 30px rgba(0,0,0,.6)}
+.cap .line{display:block;white-space:nowrap}
+
+#phones{position:absolute;inset:0;perspective:2600px;perspective-origin:540px 1076px}
+.phone{position:absolute;left:320px;top:616px;width:440px;height:920px;transform-style:preserve-3d}
+.ph-body{position:absolute;inset:0;border-radius:68px;
+  background:linear-gradient(150deg,#5a4b3a 0%,#211b16 16%,#0c0a08 50%,#1d1813 84%,#4b3e30 100%);
+  box-shadow:inset 0 0 0 2px rgba(236,202,140,.35),inset 0 0 0 7px #0b0907,0 60px 120px rgba(0,0,0,.7),0 0 110px rgba(214,171,99,.14)}
+.btn-s{position:absolute;width:5px;border-radius:3px;background:linear-gradient(90deg,#6b5843,#2a221b)}
+.screen{position:absolute;left:14px;top:14px;width:412px;height:892px;border-radius:55px;overflow:hidden;background:var(--bg);transform:translateZ(0)}
+.screen img.sc{position:absolute;left:0;top:0;width:412px;height:auto;display:block}
+.screen img.fs{position:absolute;left:0;top:0;width:412px;height:892px}
+.screen .cover{position:absolute;inset:0;background:var(--bg)}
+.screen .glare{position:absolute;inset:0;background:linear-gradient(118deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,.02) 26%,rgba(255,255,255,0) 60%,rgba(255,255,255,.035) 100%);pointer-events:none}
+.screen .sweep{position:absolute;top:-10%;left:0;width:180px;height:120%;background:linear-gradient(90deg,rgba(255,240,210,0),rgba(255,240,210,.28),rgba(255,240,210,0));transform:rotate(14deg);mix-blend-mode:screen;opacity:0}
+.island{position:absolute;top:30px;left:50%;width:120px;height:35px;margin-left:-60px;border-radius:20px;background:#000;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.tap{position:absolute;left:0;top:0;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;border:4px solid rgba(255,250,240,.95);box-shadow:0 0 22px rgba(214,171,99,.9),inset 0 0 14px rgba(214,171,99,.6);opacity:0}
+.tapdot{position:absolute;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle,rgba(255,250,240,.85),rgba(255,250,240,.35) 60%,rgba(255,250,240,0) 72%);opacity:0}
+
+#qrWrap{position:absolute;left:330px;top:790px;width:420px;height:420px;transform-style:preserve-3d;z-index:3}
+#qrCard{position:absolute;inset:0;border-radius:42px;background:#f6f0e6;padding:36px;
+  box-shadow:0 50px 100px rgba(0,0,0,.65),0 0 0 2px rgba(214,171,99,.65),0 0 70px rgba(214,171,99,.28)}
+#qrCard svg{display:block;width:348px;height:348px}
+.brk{position:absolute;width:84px;height:84px;border:9px solid var(--gold);filter:drop-shadow(0 0 12px rgba(214,171,99,.8))}
+.brk.tl{left:-34px;top:-34px;border-right:0;border-bottom:0;border-top-left-radius:30px}
+.brk.tr{right:-34px;top:-34px;border-left:0;border-bottom:0;border-top-right-radius:30px}
+.brk.bl{left:-34px;bottom:-34px;border-right:0;border-top:0;border-bottom-left-radius:30px}
+.brk.br{right:-34px;bottom:-34px;border-left:0;border-top:0;border-bottom-right-radius:30px}
+#scan{position:absolute;left:14px;top:0;width:392px;height:150px;opacity:0;pointer-events:none}
+#scan .trail{position:absolute;left:0;bottom:6px;width:100%;height:140px;background:linear-gradient(180deg,rgba(214,171,99,0),rgba(214,171,99,.32))}
+#scan .ln{position:absolute;left:-10px;bottom:0;width:calc(100% + 20px);height:7px;border-radius:4px;background:#f5d9a0;box-shadow:0 0 18px 4px rgba(214,171,99,.95),0 0 60px 10px rgba(214,171,99,.5)}
+#qrPing{position:absolute;left:50%;top:50%;width:420px;height:420px;margin:-210px 0 0 -210px;border-radius:46px;border:5px solid var(--gold);opacity:0;box-shadow:0 0 30px rgba(214,171,99,.8)}
+
+.popcard{position:absolute;left:0;top:0;border-radius:12px;overflow:hidden;transform-origin:50% 50%;
+  box-shadow:0 0 0 2px rgba(214,171,99,.85),0 40px 90px rgba(0,0,0,.75),0 0 60px rgba(214,171,99,.45);opacity:0}
+.popcard img{display:block;width:100%;height:100%}
+.ghost{position:absolute;left:0;top:0;border-radius:12px;background:#120f0c;border:2px dashed rgba(214,171,99,.45);opacity:0}
+
+#seal{position:absolute;left:676px;top:1168px;width:250px;height:250px}
+#seal .disc{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 32% 26%,#f6dba5 0%,#d6ab63 46%,#9f7133 100%);
+  box-shadow:0 30px 70px rgba(0,0,0,.6),0 0 70px rgba(214,171,99,.55),inset 0 3px 0 rgba(255,255,255,.45),inset 0 -6px 14px rgba(80,50,15,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--on-gold)}
+#seal .big{font-family:var(--serif);font-weight:700;font-size:96px;line-height:.9;letter-spacing:-.03em}
+#seal .small{font-family:var(--sans);font-weight:900;font-size:21px;letter-spacing:.18em;text-transform:uppercase;margin-top:8px}
+#seal .ring{position:absolute;inset:-18px;border-radius:50%;border:3px dashed rgba(214,171,99,.85)}
+
+/* ---------- prednosti ---------- */
+#pts{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#pt1a{position:absolute;left:0;top:656px;width:1080px;text-align:center;font-family:var(--serif);font-weight:700;font-size:84px;line-height:1.05}
+#pt1b{position:absolute;left:0;top:748px;width:1080px;text-align:center;font-family:var(--serif);font-weight:700;font-size:142px;line-height:1.05;letter-spacing:.01em}
+#pt1b span{display:inline-block;background:linear-gradient(100deg,#c99a52 0%,#ecca8c 30%,#fff3d6 46%,#ecca8c 60%,#c99a52 100%);background-size:250% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 28px rgba(214,171,99,.55));padding:0 .04em}
+.prow{position:absolute;left:0;width:1080px;display:flex;justify-content:center}
+.pill{display:flex;align-items:center;gap:26px;padding:22px 44px 22px 24px;border-radius:999px;background:rgba(38,32,25,.92);border:2px solid rgba(214,171,99,.35);box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 40px rgba(214,171,99,.12);font-family:var(--serif);font-weight:700;font-size:60px;line-height:1.1;white-space:nowrap}
+.chk{width:74px;height:74px;border-radius:50%;background:linear-gradient(145deg,#f0d29a,#d6ab63 50%,#a87a3c);display:grid;place-items:center;box-shadow:0 0 26px rgba(214,171,99,.6);flex:none}
+
+/* ---------- završni kadar ---------- */
+#logoE{top:716px;font-size:90px}
+#cta{position:absolute;left:0;top:956px;width:1080px;display:flex;justify-content:center}
+#cta .btn{position:relative;overflow:hidden;display:flex;align-items:center;gap:22px;padding:34px 56px 34px 60px;border-radius:24px;
+  background:linear-gradient(180deg,#e7c27f 0%,#d6ab63 55%,#c69650 100%);color:var(--on-gold);font-family:var(--sans);font-weight:800;font-size:47px;letter-spacing:-.005em;
+  box-shadow:0 24px 70px rgba(214,171,99,.38),0 0 0 1px rgba(255,236,200,.4) inset,0 3px 0 rgba(255,255,255,.35) inset}
+#cta .btn .sheen{position:absolute;top:-40%;left:0;width:140px;height:180%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.7),rgba(255,255,255,0));transform:rotate(18deg)}
+#ctaGlow{position:absolute;left:540px;top:1016px;width:900px;height:360px;margin:-180px 0 0 -450px;border-radius:50%;background:radial-gradient(closest-side,rgba(214,171,99,.32),rgba(214,171,99,0));opacity:0}
+#url{position:absolute;left:0;top:1146px;width:1080px;display:flex;justify-content:center;align-items:center;gap:18px;font-family:var(--sans);font-weight:700;font-size:50px;color:var(--text);letter-spacing:-.01em}
+#url .ul{position:absolute;left:50%;bottom:-16px;height:4px;width:560px;margin-left:-280px;border-radius:2px;background:linear-gradient(90deg,rgba(214,171,99,0),var(--gold),rgba(214,171,99,0));transform-origin:50% 50%}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg" class="full">
+    <div id="bgbase" class="full"></div>
+    <img id="bgPhoto" src="../../slike/hero.jpg" alt="">
+    <div id="bgPhotoShade" class="full"></div>
+    <div id="grid"></div>
+    <div id="blob1" class="blob"></div>
+    <div id="blob2" class="blob b2"></div>
+    <div id="blob3" class="blob"></div>
+    <div id="particles" class="full"></div>
+  </div>
+
+  <div id="cam" class="full">
+    <!-- 0–2 s: hook -->
+    <svg id="bell" viewBox="0 0 200 170" aria-hidden="true">
+      <defs>
+        <linearGradient id="bellG" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#f6dca8"/><stop offset=".5" stop-color="#d6ab63"/><stop offset="1" stop-color="#8f6430"/>
+        </linearGradient>
+      </defs>
+      <g id="bellWaves" fill="none" stroke="#d6ab63" stroke-width="7" stroke-linecap="round">
+        <path id="wR1" d="M168 70 Q182 92 168 114"/><path id="wR2" d="M186 54 Q208 92 186 130"/>
+        <path id="wL1" d="M32 70 Q18 92 32 114"/><path id="wL2" d="M14 54 Q-8 92 14 130"/>
+      </g>
+      <g id="bellBody">
+        <rect x="93" y="24" width="14" height="36" rx="5" fill="url(#bellG)"/>
+        <circle cx="100" cy="20" r="13" fill="url(#bellG)"/>
+        <path d="M34 134 A66 66 0 0 1 166 134 Z" fill="url(#bellG)"/>
+        <path d="M60 112 A44 44 0 0 1 90 80" stroke="rgba(255,255,255,.6)" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <rect x="16" y="134" width="168" height="18" rx="9" fill="#b88742"/>
+      </g>
+    </svg>
+    <div id="hook">
+      <span class="line"><span class="hw" id="hw1">Gosti</span> <span class="hw" id="hw2">čekaju</span></span>
+      <span class="line"><span class="hw" id="hw3">konobara.</span></span>
+      <span class="line"><span class="hw" id="hookL3">I odlaze.</span></span>
+    </div>
+
+    <div id="logoGlow"></div>
+    <div id="burst1"></div><div id="burst2"></div>
+    <div id="logoA" class="logo"><div class="lk"><div class="mark"><span>V</span><i class="sheen"></i></div><div class="word">vpsolutions</div></div></div>
+
+    <!-- 2–4.5 s: postava -->
+    <div id="setup"></div>
+    <svg id="setupUl" viewBox="0 0 1080 40"><path id="setupUlPath" d="M300 20 L780 20" stroke="#d6ab63" stroke-width="6" stroke-linecap="round" fill="none" style="filter:drop-shadow(0 0 10px rgba(214,171,99,.9))"/></svg>
+
+    <!-- 4.5–16.5 s: četiri koraka -->
+    <div id="labels"></div>
+    <div id="caps"></div>
+    <div id="phones"></div>
+
+    <!-- 16.5–18.5 s: prednosti -->
+    <div id="pts">
+      <div id="pt1a"></div>
+      <div id="pt1b"><span>BESPLATNO</span></div>
+      <div class="prow" id="pt2"><div class="pill"><span class="chk" id="chk2"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#171310" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Bez provizije po narudžbi</span></div></div>
+      <div class="prow" id="pt3"><div class="pill"><span class="chk" id="chk3"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#171310" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span>Gotovo za par dana</span></div></div>
+    </div>
+
+    <!-- 18.5–20 s: završni kadar -->
+    <div id="ctaGlow"></div>
+    <div id="logoE" class="logo"><div class="lk"><div class="mark"><span>V</span><i class="sheen"></i></div><div class="word">vpsolutions</div></div></div>
+    <div id="cta"><div class="btn"><span>Zatraži besplatan primjer</span><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#171310" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg><i class="sheen"></i></div></div>
+    <div id="url"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#d6ab63" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>vpsolution.vercel.app</span><i class="ul"></i></div>
+  </div>
+
+  <div id="flash" class="full"></div>
+  <div id="streak"></div>
+  <div id="vignette" class="full"></div>
+  <div id="grain" class="full"></div>
+  <div id="safe" class="full"><div style="top:0;height:288px;border-bottom-width:3px"></div><div style="top:1536px;height:384px;border-top-width:3px"></div></div>
+</div>
+
+<script src="assets/data.js"></script>
+<script>
+/* ================= pomoćne funkcije ================= */
+const clamp = (x, a = 0, b = 1) => (x < a ? a : x > b ? b : x);
+const lerp = (a, b, p) => a + (b - a) * p;
+const E = {
+  lin: (p) => p,
+  oC: (p) => 1 - (1 - p) ** 3,
+  iC: (p) => p * p * p,
+  ioC: (p) => (p < 0.5 ? 4 * p * p * p : 1 - (-2 * p + 2) ** 3 / 2),
+  oE: (p) => (p >= 1 ? 1 : 1 - 2 ** (-10 * p)),
+  iE: (p) => (p <= 0 ? 0 : 2 ** (10 * p - 10)),
+  oQ: (p) => 1 - (1 - p) ** 5,
+  ioQ: (p) => (p < 0.5 ? 16 * p ** 5 : 1 - (-2 * p + 2) ** 5 / 2),
+  oB: (p) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * (p - 1) ** 3 + c1 * (p - 1) ** 2; },
+  oB2: (p) => { const c1 = 2.4, c3 = c1 + 1; return 1 + c3 * (p - 1) ** 3 + c1 * (p - 1) ** 2; },
+  sp: (p) => (p >= 1 ? 1 : 1 - Math.exp(-6.5 * p) * Math.cos(9.5 * p)),
+};
+const pr = (t, t0, t1, e = E.lin) => e(clamp((t - t0) / (t1 - t0)));
+const $ = (id) => document.getElementById(id);
+const mk = (tag, cls, parent, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; if (parent) parent.appendChild(e); return e; };
+
+// postavi transformaciju / prozirnost / zamućenje elementa
+function S(el, o) {
+  const x = o.x || 0, y = o.y || 0, z = o.z || 0, s = o.s == null ? 1 : o.s;
+  const sx = o.sx == null ? s : o.sx, sy = o.sy == null ? s : o.sy;
+  let tr = `translate3d(${x.toFixed(2)}px,${y.toFixed(2)}px,${z.toFixed(2)}px)`;
+  if (o.rx) tr += ` rotateX(${o.rx.toFixed(3)}deg)`;
+  if (o.ry) tr += ` rotateY(${o.ry.toFixed(3)}deg)`;
+  if (o.r) tr += ` rotateZ(${o.r.toFixed(3)}deg)`;
+  if (o.skx) tr += ` skewX(${o.skx.toFixed(3)}deg)`;
+  tr += ` scale(${sx.toFixed(4)},${sy.toFixed(4)})`;
+  el.style.transform = tr;
+  if (o.o != null) { el.style.opacity = clamp(o.o).toFixed(4); el.style.visibility = o.o <= 0.002 ? 'hidden' : 'visible'; }
+  let f = '';
+  if (o.b != null && o.b > 0.05) f += `blur(${o.b.toFixed(2)}px) `;
+  if (o.br != null) f += `brightness(${o.br.toFixed(3)}) `;
+  el.style.filter = f || 'none';
+}
+const show = (el, on) => { el.style.display = on ? '' : 'none'; };
+
+// deterministički "slučajni" brojevi
+function rng(seed) { return () => { seed |= 0; seed = (seed + 0x6D2B79F5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+
+// razbij tekst na riječi s maskom (za "izranjanje" riječi)
+function words(parent, segments) {
+  const out = [];
+  segments.forEach(([text, cls], si) => {
+    text.split(' ').filter(Boolean).forEach((word, wi, arr) => {
+      const w = mk('span', 'w', parent);
+      const i = mk('span', 'wi' + (cls ? ' ' + cls : ''), w);
+      i.textContent = word;
+      out.push(i);
+      parent.appendChild(document.createTextNode(' '));
+    });
+  });
+  return out;
+}
+
+/* ================= konstante ================= */
+const K = 412 / 390;           // px videa po CSS px stranice (širina ekrana mobitela)
+const QR = window.QR_DATA;             // QR kod za https://stranice-restorani.vercel.app/
+const REZ = window.REZ_DATA;           // pozicije elemenata obrasca rezervacije (CSS px)
+
+/* ================= izgradnja scene ================= */
+// čestice (topli "bokeh")
+const parts = [];
+{
+  const r = rng(11), host = $('particles');
+  for (let i = 0; i < 34; i++) {
+    const size = 3 + r() ** 2 * 16;
+    const e = mk('div', 'pt', host);
+    const warm = r() < 0.7;
+    e.style.width = e.style.height = size + 'px';
+    e.style.background = `radial-gradient(circle, ${warm ? 'rgba(236,202,140,.95)' : 'rgba(243,237,227,.9)'} 0%, rgba(214,171,99,.25) 45%, rgba(214,171,99,0) 70%)`;
+    parts.push({ e, x: r() * 1080, y: r() * 1920, v: 14 + r() * 40, a: 0.12 + r() * 0.4, ph: r() * 6.28, f: 0.6 + r() * 1.6, sw: 10 + r() * 30, size });
+  }
+}
+
+// postava
+const SETUP_LINES = [
+  [['Digitalni meni i', '']],
+  [['rezerviranje stolova', '']],
+  [['za tvoj restoran —', '']],
+  [['pod tvojim imenom.', 'gi']],
+];
+const setupWords = [];
+SETUP_LINES.forEach((segs) => { const l = mk('span', 'line', $('setup')); setupWords.push(...words(l, segs).map((e) => ({ e, line: setupWords.length }))); });
+function placeSetupUnderline() {
+  // podcrta točno ispod zadnjeg retka ("pod tvojim imenom.")
+  const last = [...$('setup').querySelectorAll('.line')].pop().querySelectorAll('.wi');
+  const a = last[0].getBoundingClientRect(), b = last[last.length - 1].getBoundingClientRect();
+  $('setupUl').style.top = (b.bottom + 4) + 'px';
+  $('setupUlPath').setAttribute('d', `M${(a.left + 6).toFixed(0)} 20 L${(b.right - 6).toFixed(0)} 20`);
+  ULEN = b.right - a.left - 12;
+}
+let ULEN = 480;
+
+// koraci
+const STEPS = [
+  { t0: 4.5, label: 'QR za stolom', cap: [[['Gost skenira QR za stolom', '']], [['i naruči,', ''], ['bez čekanja konobara.', 'g']]] },
+  { t0: 7.5, label: 'Digitalni meni', cap: [[['Jelovnik sa slikama i cijenama,', '']], [['uvijek ažuran.', 'g']]] },
+  { t0: 10.5, label: 'Naručivanje online', cap: [[['Gosti naruče i za van,', '']], [['direktno s tvoje stranice.', 'g']]] },
+  { t0: 13.5, label: 'Tvoj brend, bez provizije', cap: [[['Sve pod tvojim imenom,', '']], [['bez provizije posrednika.', 'g']]] },
+];
+STEPS.forEach((st, i) => {
+  st.t1 = st.t0 + 3;
+  st.labelEl = mk('div', 'slabel', $('labels'), `<span class="num">0${i + 1}</span><span class="bar"></span><span class="lt">${st.label}</span>`);
+  st.capEl = mk('div', 'cap', $('caps'));
+  st.words = [];
+  st.cap.forEach((segs) => st.words.push(...words(mk('span', 'line', st.capEl), segs)));
+});
+
+// mobitel
+function phone(id, screens) {
+  const p = mk('div', 'phone', $('phones'));
+  p.id = id;
+  mk('div', 'ph-body', p);
+  [['left', -3, 170, 46], ['left', -3, 236, 86], ['left', -3, 336, 86], ['right', 438, 260, 120]].forEach(([, x, y, h]) => { const b = mk('i', 'btn-s', p); b.style.left = x + 'px'; b.style.top = y + 'px'; b.style.height = h + 'px'; });
+  const scr = mk('div', 'screen', p);
+  const imgs = {};
+  screens.forEach((src) => { const im = mk('img', 'sc', scr); im.src = src; im.decoding = 'sync'; imgs[src] = im; });
+  const fs = mk('img', 'fs', scr); fs.src = 'assets/float_social.png'; fs.style.visibility = 'hidden';
+  const cover = mk('div', 'cover', scr); cover.style.opacity = 0;
+  const taps = mk('div', '', scr); taps.className = 'full';
+  const sweep = mk('div', 'sweep', scr);
+  mk('div', 'glare', scr);
+  mk('div', 'island', p);
+  return { el: p, scr, imgs, fs, cover, taps, sweep };
+}
+function tapEl(ph) { const ring = mk('div', 'tap', ph.taps), dot = mk('div', 'tapdot', ph.taps); return { ring, dot }; }
+
+// 1) QR
+const qrWrap = mk('div', '', $('phones')); qrWrap.id = 'qrWrap';
+qrWrap.innerHTML = `<div id="qrCard"><svg viewBox="0 0 ${QR.n} ${QR.n}" shape-rendering="crispEdges"><path d="${QR.d}" fill="#171310"/></svg><div id="scan"><div class="trail"></div><div class="ln"></div></div></div><div id="qrPing"></div><i class="brk tl"></i><i class="brk tr"></i><i class="brk bl"></i><i class="brk br"></i>`;
+const ph1 = phone('ph1', ['assets/scr_menu.jpg']);
+// 2) meni
+const ph2 = phone('ph2', ['assets/scr_menu.jpg']);
+const CARD = { x: 16, y: 1050.8, w: 173.4, h: 336.7 };
+const ghost = mk('div', 'ghost', ph2.el);
+const popcard = mk('div', 'popcard', ph2.el, '<img src="assets/card_brancin.jpg" alt="">');
+// 3) rezervacija
+const ph3 = phone('ph3', ['assets/scr_rez_0.jpg', 'assets/scr_rez_A.jpg', 'assets/scr_rez_B.jpg', 'assets/scr_rez_C.jpg']);
+const taps3 = [tapEl(ph3), tapEl(ph3), tapEl(ph3)];
+const nextRing = mk('div', '', ph3.taps); nextRing.style.cssText = 'position:absolute;border:3px solid rgba(255,240,210,.95);border-radius:10px;box-shadow:0 0 24px rgba(214,171,99,.9);opacity:0';
+// 4) brend
+const ph4L = phone('ph4L', ['assets/scr_onama.jpg']);
+const ph4R = phone('ph4R', ['assets/scr_footer.jpg']);
+const ph4C = phone('ph4C', ['assets/scr_hero.jpg']);
+const seal = mk('div', '', $('phones')); seal.id = 'seal';
+seal.innerHTML = '<div class="ring"></div><div class="disc"><div class="big">0 %</div><div class="small">provizije</div></div>';
+
+// prednosti
+const pt1aWords = words($('pt1a'), [['Prvi mjesec', '']]);
+
+// statični raspored za ekrane koji se ne pomiču
+[ph4L, ph4R, ph4C].forEach((ph) => { Object.values(ph.imgs)[0].style.transform = 'none'; });
+
+/* ================= animacija ================= */
+function scrollTo(ph, src, off) { const im = ph.imgs[src]; im.style.transform = `translate3d(0,${(-off * K).toFixed(2)}px,0)`; }
+function only(ph, src) { for (const [k, im] of Object.entries(ph.imgs)) im.style.visibility = k === src ? 'visible' : 'hidden'; }
+function tapAt(tp, t, t0, x, y) {
+  const p = pr(t, t0, t0 + 0.5, E.oC), q = pr(t, t0 - 0.06, t0 + 0.3, E.oC);
+  const on = t > t0 - 0.06 && t < t0 + 0.55;
+  S(tp.ring, { x: x * K, y: y, s: lerp(0.45, 1.55, p), o: on ? (t < t0 ? pr(t, t0 - 0.06, t0) : 1 - p) : 0 });
+  S(tp.dot, { x: x * K, y: y, s: lerp(1.15, 0.8, q), o: on ? (t < t0 ? pr(t, t0 - 0.06, t0) * 0.9 : 0.9 * (1 - q)) : 0 });
+}
+// ulazak mobitela odozdo + izlazak prema gore ("listanje" kroz korake)
+function phonePose(t, tin, tout, pose = {}) {
+  const pi = pr(t, tin, tin + 0.68, E.oE);
+  const po = pr(t, tout, tout + 0.44, E.iC);
+  const fl = Math.sin((t - tin) * 1.7) * 6;
+  return {
+    x: (pose.x || 0) + (1 - pi) * (pose.inX || 0),
+    y: (pose.y || 0) + (1 - pi) * 1250 - po * 1400 + fl * pi * (1 - po),
+    z: pose.z || 0,
+    rx: (1 - pi) * 42 - po * 34 + (pose.rx || 0),
+    ry: (pose.ry || 0) * pi + Math.sin((t - tin) * 0.9) * 2.2,
+    r: (pose.r || 0) + (1 - pi) * (pose.inR || 0),
+    s: (pose.s || 1) * lerp(0.86, 1, pi) * (1 - po * 0.06),
+    o: t < tin || t > tout + 0.44 ? 0 : 1,
+    b: Math.max(0, Math.sin(Math.PI * clamp((t - tin) / 0.68)) * 3 * (1 - pi) * 2, po * (1 - po) * 22),
+    br: pose.br,
+  };
+}
+
+function renderAt(t) {
+  const frame = Math.round(t * 60);
+
+  /* ---- pozadina ---- */
+  parts.forEach((p) => {
+    const y = ((p.y - t * p.v) % 1920 + 1920) % 1920;
+    const x = p.x + Math.sin(t * 0.5 + p.ph) * p.sw;
+    const tw = 0.55 + 0.45 * Math.sin(t * p.f + p.ph);
+    p.e.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+    p.e.style.opacity = (p.a * tw).toFixed(3);
+  });
+  S($('grid'), { y: (t * 10) % 72 });
+  // svjetlosne mrlje prate scene
+  const sceneMix = (keys) => {
+    let v = keys[0][1];
+    for (let i = 1; i < keys.length; i++) { const [tk, val] = keys[i], [tp, pv] = keys[i - 1]; if (t >= tp) v = pv.map((a, j) => lerp(a, val[j], pr(t, Math.max(tp, tk - 0.8), tk, E.ioC))); }
+    return v;
+  };
+  const b1 = sceneMix([[0, [300, 760, 1.0, 0.85]], [2.2, [540, 520, 1.1, 0.7]], [4.6, [540, 1080, 1.25, 0.75]], [16.6, [540, 880, 1.2, 0.9]], [18.6, [540, 980, 1.35, 1.0]]]);
+  const b2 = sceneMix([[0, [820, 1360, 1.1, 0.6]], [2.2, [880, 1400, 1.0, 0.45]], [4.6, [200, 380, 0.8, 0.35]], [16.6, [880, 1300, 0.9, 0.5]], [18.6, [180, 520, 0.8, 0.45]]]);
+  const b3 = sceneMix([[0, [600, 300, 0.7, 0.0]], [4.6, [880, 1450, 0.9, 0.45]], [16.6, [200, 560, 0.8, 0.4]], [18.6, [900, 1450, 0.8, 0.4]]]);
+  [[$('blob1'), b1, 0], [$('blob2'), b2, 2], [$('blob3'), b3, 4]].forEach(([el, b, ph]) => {
+    el.style.transform = `translate3d(${(b[0] + Math.sin(t * 0.6 + ph) * 40).toFixed(1)}px,${(b[1] + Math.cos(t * 0.5 + ph) * 50).toFixed(1)}px,0) scale(${b[2].toFixed(3)})`;
+    el.style.opacity = (b[3] * (0.85 + 0.15 * Math.sin(t * 1.3 + ph))).toFixed(3);
+  });
+  // zrno filma (mijenja se 30x u sekundi)
+  const gr = rng(Math.floor(t * 30) + 3);
+  $('grain').style.backgroundPosition = `${Math.floor(gr() * 256)}px ${Math.floor(gr() * 256)}px`;
+  // fotografija restorana (art direction sa stranice: siva, kontrastna, prigušena)
+  const ph = pr(t, 1.95, 2.55, E.oC) * (1 - pr(t, 4.3, 4.75, E.ioC));
+  S($('bgPhoto'), { s: lerp(1.14, 1.0, pr(t, 1.95, 4.75, E.oC)), o: ph * 0.24 });
+  $('bgPhotoShade').style.opacity = ph.toFixed(3);
+
+  /* ---- kamera (trešnja pri udarcima) ---- */
+  let shx = 0, shy = 0;
+  [[0.64, 16], [16.66, 12]].forEach(([t0, a]) => {
+    if (t >= t0 && t < t0 + 0.4) { const d = t - t0, amp = a * Math.exp(-d * 11); shx += amp * Math.sin(d * 83); shy += amp * Math.cos(d * 71); }
+  });
+  $('cam').style.transform = `translate3d(${shx.toFixed(2)}px,${shy.toFixed(2)}px,0)`;
+  // bljesak
+  const fl = Math.max(pr(t, 0.62, 0.66) * (1 - pr(t, 0.66, 1.0, E.oC)), pr(t, 1.4, 1.46) * (1 - pr(t, 1.46, 1.9, E.oC)) * 0.8, pr(t, 16.64, 16.68) * (1 - pr(t, 16.68, 17.05, E.oC)));
+  $('flash').style.opacity = (fl * 0.9).toFixed(3);
+  // zlatni "potez" svjetla na prijelazima scena
+  let st = 0, sx = -1200;
+  [4.36, 16.42, 18.4].forEach((t0) => { if (t >= t0 && t <= t0 + 0.42) { const p = pr(t, t0, t0 + 0.42, E.ioC); st = Math.sin(Math.PI * p); sx = lerp(-900, 1500, p); } });
+  S($('streak'), { x: sx, r: 16, o: st * 0.95 });
+
+  /* ---- 0–2 s: hook ---- */
+  {
+    const out = pr(t, 1.22, 1.5, E.iC);
+    const hw = [['hw1', -0.14], ['hw2', -0.04], ['hw3', 0.1]];
+    hw.forEach(([id, t0]) => {
+      const p = pr(t, t0, t0 + 0.42, E.oE);
+      S($(id), { s: lerp(1.75, 1, p) * (1 - out * 0.08), y: (1 - p) * 26 - out * 40, o: clamp(p * 3) * (1 - out), b: (1 - p) * 16 + out * 12 });
+    });
+    const p3 = pr(t, 0.6, 0.92, E.oE), lv = pr(t, 1.2, 1.5, E.iE);
+    S($('hookL3'), { s: lerp(2.7, 1, p3), x: lv * 1250, skx: -16 * pr(t, 1.2, 1.34, E.oC), o: clamp(p3 * 4) * (t < 1.55 ? 1 : 0), b: (1 - p3) * 22 + lv * 14 });
+    // zvono: dva udarca, nitko ne dolazi
+    const pb = pr(t, -0.18, 0.28, E.oB);
+    let rot = 0, wave = 0;
+    [0.02, 0.36].forEach((h) => { if (t > h) { const d = t - h; rot += 13 * Math.exp(-d * 7) * Math.sin(d * 42); wave = Math.max(wave, Math.exp(-d * 5) * (d < 0.6 ? 1 : 0)); } });
+    S($('bell'), { s: lerp(0.5, 1, pb) * (1 - out * 0.15), r: rot, y: -out * 50, o: clamp(pb * 2) * (1 - out), b: out * 10 });
+    ['wR1', 'wL1'].forEach((id) => { $(id).style.opacity = clamp(wave * 1.2).toFixed(3); });
+    ['wR2', 'wL2'].forEach((id) => { $(id).style.opacity = clamp(wave * 1.2 - 0.25).toFixed(3); });
+    show($('hook'), t < 1.6); show($('bell'), t < 1.6);
+  }
+
+  /* ---- logo splash (1.4–2.4) + mali logo kroz postavu ---- */
+  {
+    const vis = t > 1.33 && t < 4.65;
+    show($('logoA'), vis);
+    const pm = pr(t, 1.36, 1.78, E.oB2), pw = pr(t, 1.5, 1.92, E.oE);
+    const up = pr(t, 1.9, 2.24, E.ioQ), ex = pr(t, 4.2, 4.44, E.iC);
+    const L = $('logoA');
+    L.style.transformOrigin = '540px 960px';
+    S(L, { y: lerp(0, -575, up) - ex * 60, s: lerp(1, 0.46, up), o: 1 - ex });
+    const mark = L.querySelector('.mark'), word = L.querySelector('.word');
+    S(mark, { s: pm, r: lerp(-120, 0, pm), o: clamp(pm * 2) });
+    word.style.clipPath = `inset(-20% ${(100 - pw * 100).toFixed(2)}% -30% 0)`;
+    S(word, { x: (1 - pw) * -40, o: clamp(pw * 1.5) });
+    word.style.backgroundPosition = `${lerp(100, 0, pr(t, 1.82, 2.3, E.ioC)).toFixed(2)}% 0`;
+    S(mark.querySelector('.sheen'), { x: lerp(-40, 240, pr(t, 1.78, 2.15, E.ioC)), r: 20 });
+    const pb = pr(t, 1.36, 1.95, E.oC), pb2 = pr(t, 1.46, 2.1, E.oC);
+    S($('burst1'), { s: lerp(0.2, 5.5, pb), o: (t > 1.36 ? 1 : 0) * (1 - pb) * 0.95 });
+    S($('burst2'), { s: lerp(0.2, 4.2, pb2), o: (t > 1.46 ? 1 : 0) * (1 - pb2) * 0.8 });
+    S($('logoGlow'), { y: lerp(0, -575, up), s: lerp(1, 0.55, up), o: (pr(t, 1.36, 1.6) * (1 - 0.6 * pr(t, 1.7, 2.3))) * (1 - ex) });
+  }
+
+  /* ---- 2–4.5 s: postava ---- */
+  {
+    show($('setup'), t > 1.95 && t < 4.75);
+    setupWords.forEach(({ e }, i) => {
+      const t0 = 2.1 + i * 0.03;
+      const p = pr(t, t0, t0 + 0.6, E.oE);
+      const q = pr(t, 4.3 + i * 0.012, 4.58 + i * 0.012, E.iC);
+      S(e, { y: (1 - p) * 120 - q * 130, o: (p > 0 ? 1 : 0) * (1 - q), r: (1 - p) * 4 });
+    });
+    const ul = pr(t, 2.55, 3.05, E.ioC), ulo = 1 - pr(t, 4.3, 4.5);
+    const path = $('setupUlPath');
+    path.style.strokeDasharray = ULEN.toFixed(0); path.style.strokeDashoffset = (ULEN * (1 - ul)).toFixed(1);
+    $('setupUl').style.opacity = ulo.toFixed(3);
+    show($('setupUl'), t > 2.5 && t < 4.55);
+  }
+
+  /* ---- 4.5–16.5 s: koraci (natpis + opis) ---- */
+  STEPS.forEach((s, i) => {
+    const tin = s.t0 + (i === 0 ? 0.04 : -0.06), tout = s.t1 - 0.24;
+    const last = i === STEPS.length - 1;
+    const vis = t > tin - 0.01 && t < tout + 0.4;
+    show(s.labelEl, vis); show(s.capEl, vis);
+    if (!vis) return;
+    const li = pr(t, tin, tin + 0.5, E.oE), lo = pr(t, tout, tout + 0.3, E.iC);
+    S(s.labelEl, { y: (1 - li) * 50 - lo * 50, o: li * (1 - lo) });
+    S(s.labelEl.querySelector('.bar'), { sx: li, sy: 1 });
+    s.words.forEach((e, j) => {
+      const p = pr(t, tin + 0.04 + j * 0.028, tin + 0.64 + j * 0.028, E.oE);
+      const q = pr(t, tout + j * 0.01, tout + 0.3 + j * 0.01, E.iC);
+      S(e, { y: (1 - p) * 110 - q * 110, o: (p > 0 ? 1 : 0) * (1 - q), r: (1 - p) * 5 });
+    });
+  });
+
+  /* ---- korak 1: QR za stolom ---- */
+  {
+    const vis = t > 4.5 && t < 7.8;
+    show(qrWrap, vis);
+    if (vis) {
+      const pin = pr(t, 4.56, 5.2, E.oE);
+      const mv = pr(t, 5.98, 6.62, E.ioQ);
+      const ex = pr(t, 7.22, 7.62, E.iC);
+      const bump = Math.sin(Math.PI * pr(t, 5.78, 6.02)) * 0.05;
+      S(qrWrap, {
+        x: lerp(0, -292, mv) - ex * 300, y: (1 - pin) * 900 + lerp(0, 330, mv) + ex * 500,
+        z: lerp(0, 120, mv), rx: (1 - pin) * 55, ry: lerp(0, 14, mv), r: lerp(0, -9, mv),
+        s: lerp(0.8, 1, pin) * lerp(1, 0.5, mv) * (1 + bump), o: clamp(pin * 2) * (1 - ex),
+      });
+      const bi = pr(t, 4.9, 5.2, E.oC);
+      qrWrap.querySelectorAll('.brk').forEach((b) => { S(b, { s: lerp(1.3, 1, bi) + bump * 2, o: bi }); b.style.borderColor = t > 5.78 && t < 6.1 ? '#fff4dc' : '#d6ab63'; });
+      const ps = pr(t, 5.12, 5.78, E.ioC);
+      S($('scan'), { y: lerp(-110, 300, ps), o: Math.sin(Math.PI * ps) * 1.4 });
+      const pp = pr(t, 5.78, 6.25, E.oC);
+      S($('qrPing'), { s: lerp(1, 1.7, pp), o: (t > 5.78 ? 1 : 0) * (1 - pp) });
+    }
+    const pose = phonePose(t, 6.0, 7.3, { ry: -7, inR: 6 });
+    S(ph1.el, pose); show(ph1.el, t > 6.0 && t < 7.8);
+    if (t > 6.0 && t < 7.8) {
+      only(ph1, 'assets/scr_menu.jpg');
+      scrollTo(ph1, 'assets/scr_menu.jpg', lerp(66, 150, pr(t, 6.75, 7.45, E.ioC)));
+      S(ph1.cover, { o: 1 - pr(t, 6.35, 6.75, E.oC) });
+      S(ph1.imgs['assets/scr_menu.jpg'], { y: (-lerp(66, 150, pr(t, 6.75, 7.45, E.ioC)) * K) + (1 - pr(t, 6.35, 6.85, E.oE)) * 60 });
+      ph1.fs.style.visibility = 'visible';
+      S(ph1.fs, { o: pr(t, 6.5, 6.8) });
+    }
+  }
+
+  /* ---- korak 2: digitalni meni ---- */
+  {
+    const vis = t > 7.4 && t < 10.8;
+    S(ph2.el, phonePose(t, 7.42, 10.28, { ry: 9, inR: -6 })); show(ph2.el, vis);
+    if (vis) {
+      only(ph2, 'assets/scr_menu.jpg');
+      const off = lerp(200, 700, pr(t, 8.05, 9.05, E.ioC));
+      scrollTo(ph2, 'assets/scr_menu.jpg', off);
+      ph2.fs.style.visibility = 'visible';
+      const pp = pr(t, 9.12, 9.72, E.oE), lift = pr(t, 9.08, 9.22, E.oC);
+      const cx = 14 + CARD.x * K, cy = 14 + (CARD.y - 700) * K, cw = CARD.w * K, ch = CARD.h * K;
+      [ghost, popcard].forEach((e) => { e.style.left = cx + 'px'; e.style.top = cy + 'px'; e.style.width = cw + 'px'; e.style.height = ch + 'px'; });
+      S(ghost, { o: lift * 0.95 });
+      const flo = Math.sin((t - 9.7) * 2.2) * 6 * pp;
+      S(popcard, { x: -222 * pp, y: -58 * pp + flo, z: 170 * pp, r: -5 * pp, ry: -8 * pp, s: lerp(1, 1.42, pp), o: t > 9.08 ? 1 : 0 });
+    }
+  }
+
+  /* ---- korak 3: naručivanje online (stvarni tijek rezervacije) ---- */
+  {
+    const vis = t > 10.4 && t < 13.8;
+    S(ph3.el, phonePose(t, 10.42, 13.28, { ry: -8, inR: 5 })); show(ph3.el, vis);
+    if (vis) {
+      const b = REZ.boxes;
+      let off = 150;
+      off = lerp(off, 380, pr(t, 11.2, 11.62, E.ioC));
+      off = lerp(off, 610, pr(t, 11.86, 12.42, E.ioC));
+      let src = 'assets/scr_rez_0.jpg';
+      if (t >= 11.12) src = 'assets/scr_rez_A.jpg';
+      if (t >= 11.76) src = 'assets/scr_rez_B.jpg';
+      if (t >= 12.58) src = 'assets/scr_rez_C.jpg';
+      only(ph3, src);
+      scrollTo(ph3, src, off);
+      ph3.fs.style.visibility = 'visible';
+      tapAt(taps3[0], t, 11.06, b.day.x, (b.day.y - off) * K);
+      tapAt(taps3[1], t, 11.7, b.slot.x, (b.slot.y - off) * K);
+      tapAt(taps3[2], t, 12.52, b.table.x, (b.table.y - off) * K);
+      const pn = pr(t, 12.85, 13.3, E.oC);
+      nextRing.style.left = ((b.next.x - b.next.w / 2) * K - 4) + 'px';
+      nextRing.style.top = ((b.next.y - b.next.h / 2 - off) * K - 4) + 'px';
+      nextRing.style.width = (b.next.w * K + 8) + 'px';
+      nextRing.style.height = (b.next.h * K + 8) + 'px';
+      S(nextRing, { s: lerp(1, 1.12, pn), o: (t > 12.85 ? 1 : 0) * (1 - pn) });
+    }
+  }
+
+  /* ---- korak 4: tvoj brend, bez provizije ---- */
+  {
+    const vis = t > 13.35 && t < 16.75;
+    [ph4L, ph4R, ph4C].forEach((p) => show(p.el, vis));
+    show(seal, vis);
+    if (vis) {
+      const c = phonePose(t, 13.42, 16.2, { s: 0.93, y: -6 });
+      S(ph4C.el, c);
+      const fan = pr(t, 13.72, 14.42, E.oE), fo = pr(t, 16.12, 16.5, E.iC);
+      [[ph4L, -1], [ph4R, 1]].forEach(([p, d]) => {
+        const base = phonePose(t, 13.42, 16.2, { s: 0.93 });
+        S(p.el, {
+          x: d * (lerp(0, 318, fan) + fo * 500), y: base.y + lerp(0, 74, fan), z: lerp(-40, -260, fan),
+          rx: base.rx, ry: d * -lerp(0, 24, fan), r: d * lerp(0, 9, fan),
+          s: base.s * lerp(1, 0.84, fan), o: base.o * (1 - fo), br: lerp(0.9, 0.62, fan),
+        });
+      });
+      const sp = pr(t, 14.3, 14.78, E.oB2), so = pr(t, 16.05, 16.35, E.iC);
+      S(seal, { s: sp * (1 - so) + Math.sin(Math.max(0, t - 14.8) * 3) * 0.015 * sp, r: lerp(-40, -8, sp), z: 220, o: clamp(sp * 3) * (1 - so) });
+      S(seal.querySelector('.ring'), { r: t * 22 });
+      const sw = pr(t, 14.55, 15.25, E.ioC);
+      S(ph4C.sweep, { x: lerp(-260, 560, sw), r: 14, o: Math.sin(Math.PI * sw) });
+    }
+  }
+
+  /* ---- 16.5–18.5 s: prednosti ---- */
+  {
+    const vis = t > 16.4 && t < 18.7;
+    show($('pts'), vis);
+    if (vis) {
+      const ex = pr(t, 18.3, 18.58, E.iC);
+      pt1aWords.forEach((e, j) => { const p = pr(t, 16.48 + j * 0.05, 17.05 + j * 0.05, E.oE); S(e, { y: (1 - p) * 110, o: p > 0 ? 1 : 0, r: (1 - p) * 4 }); });
+      S($('pt1a'), { y: -ex * 50, o: 1 - ex, b: ex * 10 });
+      const pb = pr(t, 16.62, 16.95, E.oE);
+      S($('pt1b'), { s: lerp(2.3, 1, pb) * (1 - ex * 0.1), o: clamp(pb * 3) * (1 - ex), b: (1 - pb) * 20 + ex * 10, y: -ex * 40 });
+      $('pt1b').firstElementChild.style.backgroundPosition = `${lerp(100, 0, pr(t, 17.05, 17.7, E.ioC)).toFixed(2)}% 0`;
+      [['pt2', 16.98, -1, 'chk2'], ['pt3', 17.22, 1, 'chk3']].forEach(([id, t0, d, chk]) => {
+        const p = pr(t, t0, t0 + 0.5, E.oE), c = pr(t, t0 + 0.22, t0 + 0.55, E.oB2);
+        S($(id), { x: d * (1 - p) * 1100, o: clamp(p * 2) * (1 - ex), y: -ex * 30, b: ex * 8, skx: d * (1 - p) * 10 });
+        S($(chk), { s: c, r: lerp(-60, 0, c) });
+      });
+      $('pt2').style.top = '1004px'; $('pt3').style.top = '1156px';
+    }
+  }
+
+  /* ---- 18.5–20 s: završni kadar ---- */
+  {
+    const vis = t > 18.4;
+    ['logoE', 'cta', 'url', 'ctaGlow'].forEach((id) => show($(id), vis));
+    if (vis) {
+      const L = $('logoE'), mark = L.querySelector('.mark'), word = L.querySelector('.word');
+      const pm = pr(t, 18.46, 18.86, E.oB2), pw = pr(t, 18.58, 18.98, E.oE);
+      S(mark, { s: pm, r: lerp(-120, 0, pm), o: clamp(pm * 2) });
+      word.style.clipPath = `inset(-20% ${(100 - pw * 100).toFixed(2)}% -30% 0)`;
+      S(word, { x: (1 - pw) * -40, o: clamp(pw * 1.5) });
+      word.style.backgroundPosition = `${lerp(100, 0, pr(t, 19.0, 19.5, E.ioC)).toFixed(2)}% 0`;
+      S(mark.querySelector('.sheen'), { x: lerp(-40, 240, pr(t, 18.95, 19.3, E.ioC)), r: 20 });
+      const pc = pr(t, 18.72, 19.2, E.oE), pulse = 1 + Math.sin(Math.max(0, t - 19.2) * 5.5) * 0.012 * pr(t, 19.2, 19.4);
+      S($('cta'), { y: (1 - pc) * 70, s: lerp(0.88, 1, pc) * pulse, o: clamp(pc * 2) });
+      const sh = pr(t, 19.25, 19.75, E.ioC);
+      S($('cta').querySelector('.sheen'), { x: lerp(-200, 900, sh), r: 18 });
+      S($('ctaGlow'), { y: 0, s: lerp(0.6, 1, pc), o: pc * (0.8 + 0.2 * Math.sin(t * 4)) });
+      const pu = pr(t, 18.95, 19.35, E.oE);
+      S($('url'), { y: (1 - pu) * 40, o: pu });
+      S($('url').querySelector('.ul'), { sx: pr(t, 19.1, 19.6, E.ioC), sy: 1 });
+    }
+  }
+}
+
+/* ================= pokretanje ================= */
+window.renderAt = renderAt;
+window.DURATION = 20;
+window.__ready = false;
+(async () => {
+  await document.fonts.ready;
+  placeSetupUnderline();
+  await Promise.all([...document.images].map((im) => (im.complete ? (im.decode ? im.decode().catch(() => {}) : 0) : new Promise((r) => { im.onload = () => (im.decode ? im.decode().catch(() => {}).then(r) : r()); im.onerror = r; }))));
+  const q = new URLSearchParams(location.search);
+  if (q.get('safe')) $('safe').classList.add('on');
+  renderAt(q.has('t') ? parseFloat(q.get('t')) : 0);
+  window.__ready = true;
+  if (!q.has('t') && !q.has('render')) {
+    const start = performance.now();
+    const loop = () => { renderAt(((performance.now() - start) / 1000) % 20); requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  }
+})();
+</script>
+</body>
+</html>
