@@ -2647,13 +2647,18 @@ body {
     padding: 0.85rem;
   }
 
+  /* U dva uska stupca cijena ide ispod naziva da je dugačak naziv
+     ne gura izvan kartice. */
   .jelo-kartica__redak {
+    flex-direction: column;
     align-items: flex-start;
+    gap: 0.3rem;
   }
 
   .jelo-kartica__naziv {
     font-size: 1rem;
     line-height: 1.15;
+    overflow-wrap: anywhere;
   }
 
   .jelo-kartica__opis {
@@ -3077,6 +3082,11 @@ body {
 
   .jelo-kartica__slika {
     aspect-ratio: 16 / 10;
+  }
+
+  .jelo-kartica__redak {
+    flex-direction: row;
+    gap: var(--razmak-s);
   }
 
   .jelo-kartica__naziv {
